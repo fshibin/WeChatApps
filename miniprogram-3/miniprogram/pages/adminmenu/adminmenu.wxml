@@ -1,0 +1,22 @@
+<!--miniprogram/pages/adminmenu/adminmenu.wxml-->
+<!--text>miniprogram/pages/adminmenu/adminmenu.wxml</text-->
+<view class="uploader">
+    <navigator url="../sitemgmt/sitemgmt" open-type="navigate" class="uploader-text">
+      <text>工地管理（Site Management）</text>
+    </navigator>
+</view>
+<view class="uploader">
+    <navigator url="../vehiclemgmt/vehiclemgmt" open-type="navigate" class="uploader-text">
+      <text>车辆管理（Vehicle Management）</text>
+    </navigator>
+</view>
+<view class="uploader">
+    <navigator url="../sitequery/sitequery" open-type="navigate" class="uploader-text">
+      <text>查询工地用车情况（Query Site Usage）</text>
+    </navigator>
+</view>
+<view class="uploader">
+    <navigator url="../driverquery/driverquery" open-type="navigate" class="uploader-text">
+      <text>查询司机工作时间（Query Driver Worktime）</text>
+    </navigator>
+</view>

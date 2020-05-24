@@ -1,0 +1,16 @@
+<!--pages/addsite/addsite.wxml-->
+<view class="addOrDeleteSite">
+  <label>输入工地地址(Enter Site Address):</label>
+  <input class="textbox" type="text" bindinput="onNewSite"/>
+  <button class="button" bindtap="onAddSite">添加Add</button>
+</view>
+<view class="addOrDeleteSite">
+  <label>选择工地地址(Select Site Address):</label>
+  <view class='listWithCheckBoxes'>
+    <checkbox-group class="listItemWithCheckBox" wx:for="{{sites}}" wx:key="index" bindchange="onCheckboxChange" catchtap='onStopEvent' data-checkid='{{index}}'  style="height:{{item.height}}">
+      <checkbox class="checkbox"></checkbox>
+      <text class="addr" auto-height="true" name="addr{{index}}">{{item.addr}}</text> 
+    </checkbox-group>
+  </view>
+  <button class="button" bindtap="onDeleteSite">删除Delete</button>
+</view>

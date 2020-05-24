@@ -1,0 +1,16 @@
+<!--pages/addsite/addsite.wxml-->
+<view class="addOrDeleteSite">
+  <label>Please enter an address:</label>
+  <input class="textbox" type="text"></input>
+  <button class="btn1">Add</button>
+</view>
+<view class="addOrDeleteSite">
+  <label>Select some addresses to delete:</label>
+  <view class='listWithCheckBoxes'>
+    <view class="listItemWithCheckBox" wx:for="{{addresses}}" wx:key="index">
+      <checkbox class="cbx1"></checkbox>
+      <view class="address">{{item}}</view> 
+    </view>
+  </view>
+  <button class="btn1">Delete</button>
+</view>

@@ -1,0 +1,32 @@
+/* pages/addsite/addsite.wxss */
+.addOrDeleteSite{
+  border: 10rpx solid greenyellow;
+  margin: 10rpx;
+  text-align: left;
+}
+
+.textbox{
+  border: 5rpx solid lightgrey;
+  margin: 5rpx;
+  text-align: left;
+  color: black;
+  height: 40rpx;
+}
+
+.btn1 {
+  width: 100%;
+  margin-top: 20rpx;
+  background-color: purple;
+  color: orange;
+}
+.listWithCheckBoxes {
+  border: 5rpx solid lightgray;
+  margin: 5rpx;
+}
+.listItemWithCheckBox {
+  display : flex ; flex-flow : row;  
+}
+.cbx1 {
+  margin-left: 2rpx;
+  margin-bottom: 2rpx;
+}

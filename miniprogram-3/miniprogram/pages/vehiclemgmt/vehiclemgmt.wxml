@@ -1,0 +1,16 @@
+<!--pages/vehiclemgmt/vehiclemgmt.wxml-->
+<view class="addOrDeleteVehicle">
+  <label>输入车牌号码(Enter Plate Number):</label>
+  <input class="textbox" type="text" bindinput="onNewVehicle"/>
+  <button class="button" bindtap="onAddVehicle">添加Add</button>
+</view>
+<view class="addOrDeleteVehicle">
+  <label>选择车牌号码(Select Plate Number):</label>
+  <view class='listWithCheckBoxes'>
+    <checkbox-group class="listItemWithCheckBox" wx:for="{{vehicles}}" wx:key="index" bindchange="onCheckboxChange" catchtap='onStopEvent' data-checkid='{{index}}'  style="height:{{item.height}}">
+      <checkbox class="checkbox"></checkbox>
+      <text class="pnum" auto-height="true" name="pnum{{index}}">{{item.pnum}}</text> 
+    </checkbox-group>
+  </view>
+  <button class="button" bindtap="onDeleteVehicle">删除Delete</button>
+</view>

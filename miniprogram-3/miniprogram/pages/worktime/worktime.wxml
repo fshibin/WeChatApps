@@ -1,0 +1,27 @@
+<!--miniprogram/pages/worktime/worktime.wxml-->
+<view class="page">
+    <form class="form" catchsubmit="formSubmit" catchreset="formReset">
+      <view class="uploader">
+        <view class="prompt">您的名字(Your Name):</view>
+        <input class="userinput" name="nameInput" placeholder="" />
+      </view>
+      <view class="uploader">
+        <view class="prompt">车牌号码(Plate Number):</view>
+        <input class="userinput" name="pnumInput" placeholder="" />
+      </view>
+      <view class="uploader">
+        <view class="prompt">日期(Date):</view>
+        <text>{{words}}</text>
+      </view>
+      <view class="uploader">
+        <view class="prompt">开工时间(Start Time):</view>
+        <input class="userinput" name="startTimeInput" placeholder="" />
+      </view>
+      <view class="uploader">
+        <view class="prompt">收工时间(Stop Time):</view>
+        <input class="userinput" name="stopTimeInput" placeholder="" />
+      </view>
+      <button class="button" type="primary" formType="submit">Submit</button>
+      <button class="button" formType="reset">Reset</button>
+    </form>
+</view>

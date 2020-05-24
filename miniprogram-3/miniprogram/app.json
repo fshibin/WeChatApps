@@ -1,0 +1,19 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/adminmenu/adminmenu",
+    "pages/sitemgmt/sitemgmt",
+    "pages/vehiclemgmt/vehiclemgmt",
+    "pages/worktime/worktime"
+  ],
+  "resizable": true,
+  "window": {
+    "backgroundColor": "#F6F6F6",
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#00F",
+    "navigationBarTitleText": "请给小程序命名",
+    "navigationBarTextStyle": "black"
+  },
+  "sitemapLocation": "sitemap.json",
+  "style": "v2"
+}
