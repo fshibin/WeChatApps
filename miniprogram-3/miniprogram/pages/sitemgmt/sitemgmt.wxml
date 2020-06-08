@@ -7,7 +7,7 @@
 <view class="addOrDeleteSite">
   <label>选择工地地址(Select Site Address):</label>
   <view class='listWithCheckBoxes'>
-    <checkbox-group class="listItemWithCheckBox" wx:for="{{sites}}" wx:key="index" bindchange="onCheckboxChange" catchtap='onStopEvent' data-checkid='{{index}}'  style="height:{{item.height}}">
+    <checkbox-group class="listItemWithCheckBox" wx:for="{{sites}}" wx:key="index" bindchange="onCheckboxChange" catchtap="onStopEvent" data-checkid="{{index}}"  style="height:{{item.height}}">
       <checkbox class="checkbox"></checkbox>
       <text class="addr" auto-height="true" name="addr{{index}}">{{item.addr}}</text> 
     </checkbox-group>

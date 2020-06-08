@@ -1,9 +1,9 @@
 <!--index.wxml-->
 <view class="container">
   <view class="userinfo">
-    <button class="btns" wx:if="{{(!hasUserInfo || !userInfo.nickName) && canIUse}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 点我 (Click Me!) </button>
+    <button class="button" wx:if="{{(!hasUserInfo || !userInfo.nickName) && canIUse}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 点我 (Click Me!) </button>
     <block wx:else>
-      <image bindtap="bindViewTap" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
+      <image bindtap="bindViewTap" class="avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
       <text>{{userInfo.nickName}}</text>
       <text wx:if="{{userInfo.nickName == admin}}">您是管理员。</text>
       <text wx:else>您是司机。</text>
@@ -12,7 +12,7 @@
     </block>
   </view>
   <view class="usermotto">
-    <text wx:if="{{(!hasUserInfo || !userInfo.nickName) && canIUse}}" class="user-motto">请点击上面的按钮来获取\n您的头像、昵称、地区和性别等信息。\nPlease click above button to obtain your information like nickname, profile photo, region and gender, etc.\n</text>
-    <text wx:else class="user-motto">请点击您的头像进入主菜单。\nPlease click your profile photo to enter the main menu.</text>
+    <text wx:if="{{(!hasUserInfo || !userInfo.nickName) && canIUse}}" class="nextstep">请点击上面的按钮来获取\n您的头像、昵称、地区和性别等信息。\nPlease click above button to obtain your information like nickname, profile photo, region and gender, etc.\n</text>
+    <text wx:else class="nextstep">请点击您的头像进入主菜单。\nPlease click your profile photo to enter the main menu.</text>
   </view>
 </view>

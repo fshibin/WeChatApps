@@ -1,0 +1,28 @@
+/* miniprogram/pages/queryworktime/queryworktime.wxss */
+
+.page {
+  width: 100%;
+}
+.form {
+  width: 100%;
+}
+
+.wtitem {
+  font-family: "Courier New", Courier, monospace;  
+}
+
+.section {
+  width: 100%;
+  height: auto;
+  padding: 0 0 0 20rpx;
+  flex-direction: column;
+  align-items: flex-start;
+  box-sizing: border-box;
+}
+
+.button {
+  width: 100%;
+  margin-top: 20rpx;
+  background-color: green;
+  color: white;
+}

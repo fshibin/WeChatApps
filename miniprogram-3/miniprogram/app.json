@@ -4,7 +4,10 @@
     "pages/adminmenu/adminmenu",
     "pages/sitemgmt/sitemgmt",
     "pages/vehiclemgmt/vehiclemgmt",
-    "pages/worktime/worktime"
+    "pages/worktime/worktime",
+    "pages/queryworktime/queryworktime",
+    "pages/vehicleuse/vehicleuse",
+    "pages/register/register"
   ],
   "resizable": true,
   "window": {
@@ -15,5 +18,10 @@
     "navigationBarTextStyle": "black"
   },
   "sitemapLocation": "sitemap.json",
-  "style": "v2"
+  "style": "v2",
+  "openId": "",
+  "driverName": "",
+  "lastUsedPnum": "",
+  "pageWidth": 0,
+  "infoLeft": 0
 }

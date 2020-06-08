@@ -3,6 +3,7 @@
 const app = getApp()
 
 Page({
+
   data: {
     time: (new Date()).toDateString(),
     motto: 'Hello World, today is: ',
@@ -11,6 +12,7 @@ Page({
     canIUse: wx.canIUse('button.open-type.getUserInfo'),
     "admin": "Nobody"
   },
+
   //事件处理函数
   bindViewTap: function() {
     if (this.data.userInfo.nickName == this.data.admin) {
@@ -23,6 +25,7 @@ Page({
       })
     }
   },
+
   onLoad: function () {
     if (app.globalData.userInfo) {
       this.setData({
@@ -50,7 +53,40 @@ Page({
         }
       })
     }
+    this.getOpenId();
+    if (this.data.userInfo.nickName != this.data.admin) {
+      this.getDriverInfo();
+    }
   },
+
+  // 获取用户openid
+  getOpenId: function() {
+    wx.cloud.callFunction({
+      name: 'getopenid',
+      data: {},
+      success: res => {
+        app.globalData.openId = res.result;
+      }
+    })
+  },
+
+  getDriverInfo: function() {
+    const db = wx.cloud.database()
+    db.collection('drivers').where({
+      _openid: app.globalData.openId,
+    }).get().then(res => {
+      if (res.data.length > 0) {
+        app.globalData.driverName = res.data[0].name;
+        app.globalData.lastUsedPnum = res.data[0].lastUsedPnum;
+        if (res.data.length > 1) console.warn('More than 1 records found!');
+      } else {
+        // new driver
+        app.globalData.driverName = '';
+        app.globalData.lastUsedPnum = '';
+      }
+    });
+  },
+
   getUserInfo: function(e) {
     console.log(e)
     app.globalData.userInfo = e.detail.userInfo

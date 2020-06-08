@@ -1,22 +1,23 @@
-<!--miniprogram/pages/adminmenu/adminmenu.wxml-->
-<!--text>miniprogram/pages/adminmenu/adminmenu.wxml</text-->
-<view class="uploader">
-    <navigator url="../worktime/worktime" open-type="navigate" class="uploader-text">
-      <text>开工登记（Start Work Register）</text>
+<!--miniprogram3/pages/drivermenu/drivermenu.wxml-->
+<view class="page" id="page">
+  <view class="section" wx:if="{{driverName==''}}">
+    <navigator url="../register/register" open-type="navigate" class="menuitem" style="min-width:{{pageWidth-2*infoLeft}}px;">
+      <text id="info0">登记您的名字（Register Your Name）</text>
     </navigator>
-</view>
-<view class="uploader">
-    <navigator url="../stopwork/stopwork" open-type="navigate" class="uploader-text">
-      <text>收工登记（Stop Work Register）</text>
+  </view>
+  <view class="section" wx:if="{{driverName}}">
+    <navigator url="../worktime/worktime" open-type="navigate" class="menuitem" style="min-width:{{pageWidth-2*infoLeft}}px;">
+      <text id="info0">记录工作时间（Record Work Time）</text>
     </navigator>
-</view>
-<view class="uploader">
-    <navigator url="../vehicleuse/vehicleuse" open-type="navigate" class="uploader-text">
-      <text>记录工地用车（Site Vehicle Use）</text>
+  </view>
+  <view class="section" wx:if="{{driverName}}">
+    <navigator url="../vehicleuse/vehicleuse" open-type="navigate" class="menuitem" style="min-width:{{pageWidth-2*infoLeft}}px;">
+      <text>记录工地用车（Record Site Vehicle Use）</text>
     </navigator>
-</view>
-<view class="uploader">
-    <navigator url="../selfquery/selfquery" open-type="navigate" class="uploader-text">
+  </view>
+  <view class="section" wx:if="{{driverName}}">
+    <navigator url="../queryworktime/queryworktime" open-type="navigate" class="menuitem" style="min-width:{{pageWidth-2*infoLeft}}px;">
       <text>查询您的工作情况（Query Your Worktime）</text>
     </navigator>
+  </view>
 </view>

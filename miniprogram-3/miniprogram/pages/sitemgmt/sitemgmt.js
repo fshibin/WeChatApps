@@ -167,15 +167,15 @@ Page({
    */
   onShow: function () {
     var i;
-    for (i = 0; i < sites.length; i++) {
+    for (i = 0; i < this.data.sites.length; i++) {
       var that = this;
       let id = "#addr" + i;
       let query = wx.createSelectorQuery(); //创建查询对象
       query.select(id).boundingClientRect(); //获取view的边界及位置信息
       query.exec(function (res) {
-        that.sites[i].height = res[0].height + "px";
+        that.data.sites[i].height = res[0].height + "px";
         that.setData({
-          sites: sites,
+          sites: that.data.sites,
         });
       });
     }

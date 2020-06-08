@@ -1,12 +1,4 @@
 /**app.wxss**/
-.container {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  box-sizing: border-box;
-} 
 
 button {
   background: initial;
@@ -75,7 +67,6 @@ page {
 }
 
 .uploader-text, .tunnel-text {
-  width: 100%;
   line-height: 52px;
   font-size: 34rpx;
   color: #007aff;
@@ -156,7 +147,47 @@ page {
   line-height: 36rpx;
   word-break: break-all;
 }
-.btns {
+
+/**project specific**/
+
+.page {
+  width: 100%;
+}
+
+.form {
+  width: 100%;
+}
+
+.section {
+  margin-top: 40rpx;
+  padding: 0 0 0 40rpx;
+  height: auto;
+  width: 100%;
+  border: 1px solid lightgrey;
+  border-left: none;
+  border-right: none;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  box-sizing: border-box;
+}
+.prompt {
+  width: 100%;
+  font-size: 34rpx;
+  color: #007aff;
+}
+
+.userinput {
+  width: auto;
+}
+.menuitem {
+  line-height: 52px;
+  font-size: 34rpx;
+  color: #007aff;
+}
+
+.button {
   width: 100%;
   margin-top: 20rpx;
   background-color: green;
