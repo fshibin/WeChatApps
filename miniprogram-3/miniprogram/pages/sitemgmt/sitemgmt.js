@@ -6,7 +6,11 @@ Page({
    */
   data: {
     sites: [],
-    newSite: null
+    newSite: '',
+    pageWidth: 0,
+    infoLeft: 0,
+    checked: false,
+    ldStDone: false,
   },
 
   onNewSite: function(e) {
@@ -18,20 +22,21 @@ Page({
   },
 
   onAddSite: function () {
+    if (this.data.newSite == '') {
+      getApp().showError('请输入一个地址！\nPlease input an address!');
+      return;
+    }
+    getApp().showLoading('处理中');
     const db = wx.cloud.database()
     db.collection('sites').where({
       addr: db.RegExp({
         // .replace(/[.*+?^${}()|[\]\\]/g, '\\$&') escapes regex special characters.
-        regexp: this.data.newSite.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'),
+        regexp: '^' + this.data.newSite.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '$',
         options: 'i',
       }),
     }).count().then(res => {
         if (res.total > 0) {
-          wx.showToast({
-            icon: 'none',
-            title: "已存在Exists!",
-            duration: 3000,
-          }) 
+          getApp().showError("记录已存在！\nRecord already exists!");
         } else {
           db.collection('sites').add({
             data: {
@@ -39,17 +44,11 @@ Page({
             },
             success: res => {
               this.onLoad();
-              wx.showToast({
-                title: '添加成功OK!',
-                duration: 3000,
-              })
+              this.setData({newSite:''});
+              getApp().showSuccess('添加成功！\nAddition succeeded!');
             },
             fail: err => {
-              wx.showToast({
-                title: '添加失败Failed!',
-                icon: 'none',
-                duration: 3000,
-              })
+              getApp().showError('添加失败！\nAddition failed!');
             },
           })
         }
@@ -77,6 +76,11 @@ Page({
         numToDelete++;
       }
     }
+    if (numToDelete == 0) {
+      getApp().showError('请至少选择一个地址！\nPlease select at least one address!');
+      return;
+    }
+    getApp().showLoading('处理中');
     for (i = 0; i < this.data.sites.length; i++) {
       if (this.data.sites[i].selected) {
         wx.cloud.callFunction({
@@ -92,49 +96,28 @@ Page({
             if (numResponseGot == numToDelete) { // last one
               if (someSucceeded) this.onLoad();
               if (!someSucceeded) {
-                wx.showToast({
-                  title: '删除失败Failed!',
-                  icon: 'none',
-                  duration: 3000,
-                })
+                getApp().showError('删除失败Failed!');
               } else if (someFailed) {
-                wx.showToast({
-                  title: '部分成功SomeOK!',
-                  icon: 'none',
-                  duration: 3000,
-                })
+                this.setData({checked:false});
+                getApp().showSuccess('部分成功SomeOK!');
               } else {
-                wx.showToast({
-                  title: '删除成功AllOK!',
-                  duration: 3000,
-                })     
+                this.setData({checked:false});
+                getApp().showSuccess('删除成功AllOK!')     
               }
           
             }
           },
           fail: err => {
             someFailed = true;
-            console.error('[云函数] [rmsite] 调用失败：', err);
             numResponseGot++;
             if (numResponseGot == numToDelete) { // last one
               if (someSucceeded) this.onLoad();
               if (!someSucceeded) {
-                wx.showToast({
-                  title: '删除失败Failed!',
-                  icon: 'none',
-                  duration: 3000,
-                })
+                getApp().showError('删除失败Failed!');
               } else if (someFailed) {
-                wx.showToast({
-                  title: '部分成功SomeOK!',
-                  icon: 'none',
-                  duration: 3000,
-                })
+                getApp().showSuccess('部分成功SomeOK!');
               } else {
-                wx.showToast({
-                  title: '删除成功OK!',
-                  duration: 3000,
-                })     
+                getApp().showSuccess('删除成功AllOK!')     
               }
             }
           }
@@ -147,72 +130,68 @@ Page({
    * Lifecycle function--Called when page load
    */
   onLoad: function (options) {
-    const db = wx.cloud.database()
-    db.collection('sites').get().then(res => {
-      this.setData({
-        sites: res.data,
-      });
-    })
+    wx.cloud.callFunction({
+      name: 'loadsites',
+      data: {
+      },
+      success: res => {
+        if (res.result != null) {
+          this.setData({
+            sites: res.result.data,
+          });
+        }
+        this.setData({ldStDone:true})
+      },
+      fail: err => {
+        this.setData({ldStDone:true})
+      },
+    });
+    this.setData({
+      pageWidth: getApp().globalData.pageWidth,
+      infoLeft: getApp().globalData.infoLeft,
+    });
   },
 
   /**
    * Lifecycle function--Called when page is initially rendered
    */
   onReady: function () {
-
   },
 
   /**
    * Lifecycle function--Called when page show
    */
   onShow: function () {
-    var i;
-    for (i = 0; i < this.data.sites.length; i++) {
-      var that = this;
-      let id = "#addr" + i;
-      let query = wx.createSelectorQuery(); //创建查询对象
-      query.select(id).boundingClientRect(); //获取view的边界及位置信息
-      query.exec(function (res) {
-        that.data.sites[i].height = res[0].height + "px";
-        that.setData({
-          sites: that.data.sites,
-        });
-      });
-    }
   },
 
   /**
    * Lifecycle function--Called when page hide
    */
   onHide: function () {
-
   },
 
   /**
    * Lifecycle function--Called when page unload
    */
   onUnload: function () {
-
   },
 
   /**
    * Page event handler function--Called when user drop down
    */
   onPullDownRefresh: function () {
-
   },
 
   /**
    * Called when page reach bottom
    */
   onReachBottom: function () {
-
   },
 
   /**
    * Called when user click on the top right corner to share
    */
   onShareAppMessage: function () {
-
   }
+
 })

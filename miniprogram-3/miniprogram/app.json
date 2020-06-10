@@ -6,8 +6,10 @@
     "pages/vehiclemgmt/vehiclemgmt",
     "pages/worktime/worktime",
     "pages/queryworktime/queryworktime",
+    "pages/driverquery/driverquery",
     "pages/vehicleuse/vehicleuse",
-    "pages/register/register"
+    "pages/register/register",
+    "pages/querysiteuse/querysiteuse"
   ],
   "resizable": true,
   "window": {
@@ -22,6 +24,8 @@
   "openId": "",
   "driverName": "",
   "lastUsedPnum": "",
+  "lastUsedSite": "",
+  "lastUsedQuarry": "",
   "pageWidth": 0,
   "infoLeft": 0
 }

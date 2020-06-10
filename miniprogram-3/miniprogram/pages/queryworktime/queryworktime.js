@@ -8,10 +8,11 @@ Page({
     driverName: '',
     startDate: '',
     stopDate: '',
-    cnSpaces: '　　　　　　　　', // Chinese spaces
     records: [],
     totalTime: '00:00',
     totalMinutes: 0,
+    pageWidth: 0,
+    infoLeft: 0,
   },
 
   /**
@@ -30,44 +31,59 @@ Page({
     let d2 = dt2.getDate();
     var dtStr2 = '' + dt2.getFullYear() + '-' + (m2 < 10 ? '0' + m2 : m2) +
       '-' + (d2 < 10 ? '0' + d2 : d2);
+ 
     this.setData({
       driverName: getApp().globalData.driverName,
       startDate: dtStr2,
       stopDate: dtStr,
+      pageWidth: getApp().globalData.pageWidth,
+      infoLeft: getApp().globalData.infoLeft,
     })
   },
+
   changeStartDate : function(e) {
     this.setData({ startDate: e.detail.value});
   },
+
   changeStopDate : function(e) {
     this.setData({ stopDate: e.detail.value});
   },
+
   onQuery: function() {
-    const db = wx.cloud.database()
-    const _ = db.command
-    db.collection('worktime').where({
-      driver: this.data.driverName,
-      date: _.gte(this.data.startDate).and(_.lte(this.data.stopDate)),
-    }).get().then(res => {
-      var i
-      var lines = []
-      this.data.totalMinutes = 0;
-      for (i = 0; i < res.data.length; i++) {
-        let duration = '00:00';
-        if (res.data[i].startTime && res.data[i].stopTime) duration = this.getDuration(res.data[i].startTime, res.data[i].stopTime);
-        let ln = res.data[i].date + '>' + (res.data[i].startTime ? res.data[i].startTime : '??:??') +
-          '-' + (res.data[i].stopTime ? res.data[i].stopTime : '??:??') + '>' + duration;
-        lines.push(ln);
-      }
-      let h = parseInt(this.data.totalMinutes / 60); // hours
-      let m = this.data.totalMinutes % 60; // minutes
-      let tt = '' + (h > 9 ? h : '0' + h) + ':' + (m > 9 ? m : '0' + m);
-      this.setData({
-        records: lines,
-        totalTime: tt,
-      });
+    getApp().showLoading('处理中')
+    wx.cloud.callFunction({
+      name: 'queryworktime',
+      data: {
+        driver: this.data.driverName,
+        startDate: this.data.startDate,
+        stopDate: this.data.stopDate,
+      },
+      success: res => {
+        var i
+        var lines = []
+        this.data.totalMinutes = 0;
+        for (i = 0; res.result != null && i < res.result.data.length; i++) {
+          let item = res.result.data[i];
+          let duration = '00:00';
+          if (item.startTime && item.stopTime) duration = this.getDuration(item.startTime, item.stopTime);
+          let ln = item.date + '|' + (item.startTime ? item.startTime : '??:??') +
+            '-' + (item.stopTime ? item.stopTime : '??:??') + '=>' + duration + '|' + item.pnum;
+          lines.push(ln);
+        }
+        let h = parseInt(this.data.totalMinutes / 60); // hours
+        let m = this.data.totalMinutes % 60; // minutes
+        let tt = '' + (h > 9 ? h : '0' + h) + ':' + (m > 9 ? m : '0' + m);
+        this.setData({
+          records: lines,
+          totalTime: tt,
+        });
+        wx.hideLoading({
+          complete: (res) => {},
+        })
+      },
     })
   },
+
   getDuration : function(s1, s2) {
     let d1 = new Date('2000/01/01 ' + s1 + ':00');
     let d2 = new Date('2000/01/01 ' + s2 + ':00');
@@ -83,48 +99,42 @@ Page({
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function () {
-
   },
 
   /**
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-
   },
 
   /**
    * 生命周期函数--监听页面隐藏
    */
   onHide: function () {
-
   },
 
   /**
    * 生命周期函数--监听页面卸载
    */
   onUnload: function () {
-
   },
 
   /**
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh: function () {
-
   },
 
   /**
    * 页面上拉触底事件的处理函数
    */
   onReachBottom: function () {
-
   },
 
   /**
    * 用户点击右上角分享
    */
   onShareAppMessage: function () {
-
   }
+
 })

@@ -1,16 +1,18 @@
 <!--pages/vehiclemgmt/vehiclemgmt.wxml-->
-<view class="addOrDeleteVehicle">
-  <label>输入车牌号码(Enter Plate Number):</label>
-  <input class="textbox" type="text" bindinput="onNewVehicle"/>
-  <button class="button" bindtap="onAddVehicle">添加Add</button>
-</view>
-<view class="addOrDeleteVehicle">
-  <label>选择车牌号码(Select Plate Number):</label>
-  <view class='listWithCheckBoxes'>
-    <checkbox-group class="listItemWithCheckBox" wx:for="{{vehicles}}" wx:key="index" bindchange="onCheckboxChange" catchtap='onStopEvent' data-checkid='{{index}}'  style="height:{{item.height}}">
-      <checkbox class="checkbox"></checkbox>
-      <text class="pnum" auto-height="true" name="pnum{{index}}">{{item.pnum}}</text> 
+<view class="page">
+  <view class="section"/>
+  <view class="section">
+    <view class="prompt">输入车牌号码(Enter Plate Number):</view>
+    <input class="userinput" placeholder="请输入(Please input)" type="text" value="{{newVehicle}}" bindinput="onNewVehicle" style="min-width:{{pageWidth-2*infoLeft}}px;"/>
+  </view>
+  <button class="button" bindtap="onAddVehicle" disabled="{{!ldVcDone}}">添加Add</button>
+  <view class="section">
+    <view class="prompt">选择车牌号码(Select Plate Number):</view>
+    <checkbox-group class="cbgroup" wx:for="{{vehicles}}" wx:key="index" bindchange="onCheckboxChange" data-checkid="{{index}}" style="max-width:{{pageWidth-2*infoLeft}}px;">
+      <checkbox class="checkbox" checked="{{checked}}"></checkbox>
+      <text class="cbitem" auto-height="true" style="font-size:32rpx">{{item.pnum}}</text> 
     </checkbox-group>
   </view>
-  <button class="button" bindtap="onDeleteVehicle">删除Delete</button>
+  <button class="button" bindtap="onDeleteVehicle"  disabled="{{!ldVcDone}}">删除Delete</button>
+  <view class="section"/>
 </view>

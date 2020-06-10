@@ -16,5 +16,43 @@ App({
     }
 
     this.globalData = {}
-  }
+  },
+
+  showError: function(msg) {
+    wx.hideLoading({
+      complete: (res) => {
+      },
+    })
+    wx.showModal({
+      title: '错误Error!',
+      content: msg,
+      showCancel: false,
+      mask: true,
+    })
+  },
+
+  showSuccess: function(msg) {
+    wx.hideLoading({
+      complete: (res) => {
+      },
+    })
+    wx.showModal({
+      title: '成功Success!',
+      content: msg,
+      showCancel: false,
+      mask: true,
+    })
+  },
+
+  showLoading: function(msg) {
+    wx.showLoading({
+      title: msg,
+      mask: true,
+    })
+    setTimeout(function () {
+      wx.hideLoading()
+    }, 30000)
+  },
+
 })
+// http://taylorliang.top/2018/06/07/miniprogram-table/

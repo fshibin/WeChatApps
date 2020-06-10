@@ -1,57 +1,59 @@
 <!--miniprogram/pages/vehicleuse/vehicleuse.wxml-->
 <view class="page" id="page">
+  <view class="section"/>
     <form class="form" catchsubmit="formSubmit" catchreset="formReset">
-      <view class="uploader">
+      <view class="section">
         <view class="prompt" id="info0">您的名字 (Your Name):</view>
-        <input class="userinput" value="{{driverName}}" disabled="{{driverName0}}" style="color:{{driverName0 ? 'grey' : 'black'}};min-width:{{pageWidth-2*infoLeft}}px;" bindinput="inputName"/>
+        <input class="userinput" value="{{driverName}}" disabled="true" style="color:grey;min-width:{{pageWidth-2*infoLeft}}px;"/>
       </view>
-      <view class="uploader">
+      <view class="section">
         <view class="prompt">日期-年月日 (Date-YMD):</view>
         <picker mode="date" value="{{date}}" bindchange="changeDate">
-          <view class="userinput" style="min-width:{{pageWidth-2*infoLeft}}px;">{{date + cnSpaces}}</view>
+          <view class="userinput" style="min-width:{{pageWidth-2*infoLeft}}px;color:{{date?'black':'grey'}}">{{date?date:'请选择(Please select)'}}</view>
         </picker>
       </view>
-      <view class="uploader">
+      <view class="section">
         <view class="prompt">车牌号码 (Plate Number):</view>
         <picker mode="selector" range="{{pnums}}" bindchange="changePnum">
-          <view class="userinput" style="min-width:{{pageWidth-2*infoLeft}}px;">{{pnum ? pnum + cnSpaces : cnSpaces}}</view>
+          <view class="userinput" style="min-width:{{pageWidth-2*infoLeft}}px;color:{{pnum?'black':'grey'}}">{{pnum?pnum:'请选择(Please select)'}}</view>
         </picker>
       </view>
-      <view class="uploader">
+      <view class="section">
         <view class="prompt">工作地址 (Job Address):</view>
         <picker mode="selector" range="{{sites}}" bindchange="changeSite">
-          <view class="userinput" style="font-size:32rpx" style="min-width:{{pageWidth-2*infoLeft}}px;">{{site}}</view>
+          <view class="userinput" style="font-size:32rpx;min-width:{{pageWidth-2*infoLeft}}px;color:{{pnum?'black':'grey'}}">{{site?site:'请选择(Please select)'}}</view>
         </picker>
       </view>
-      <view class="uploader">
-        <view class="prompt">开始时间-时分 (StartTime-HM):</view>
+      <view class="section">
+        <view class="prompt">开始时间-时分 (Start Time-HM):</view>
         <picker mode="time" value="{{startTime}}" bindchange="changeStartTime">
-          <view class="userinput" style="min-width:{{pageWidth-2*infoLeft}}px;">{{startTime ? startTime + cnSpaces : cnSpaces}}</view>
+          <view class="userinput" style="min-width:{{pageWidth-2*infoLeft}}px;color:{{startTime?'black':'grey'}}">{{startTime?startTime:'请选择(Please select)'}}</view>
         </picker>
       </view>
-      <view class="uploader">
-        <view class="prompt">结束时间-时分 (StopTime-HM):</view>
+      <view class="section">
+        <view class="prompt">结束时间-时分 (Stop Time-HM):</view>
         <picker mode="time" value="{{stopTime}}" bindchange="changeStopTime">
-          <view class="userinput" style="min-width:{{pageWidth-2*infoLeft}}px;">{{stopTime ? stopTime + cnSpaces : cnSpaces}}</view>
+          <view class="userinput" style="min-width:{{pageWidth-2*infoLeft}}px;color:{{stopTime?'black':'grey'}}">{{stopTime?stopTime:'请选择(Please select)'}}</view>
         </picker>
       </view>
-      <view class="uploader">
+      <view class="section">
         <view class="prompt">运送物品 (Carried Goods):</view>
         <checkbox-group class="cbgroup" wx:for="{{mats}}" wx:key="index" bindchange="onCheckboxChange" data-checkid="{{index}}" style="max-width:{{pageWidth-2*infoLeft}}px;">
           <checkbox class="checkbox"></checkbox>
-          <text class="mat" auto-height="true" name="mat{{index}}" style="font-size:32rpx">{{item.name}}</text>
-          <input name="mato" wx:if="{{index==mats.length-1}}" disabled="{{!mats[index].selected}}" style="color:{{mats[index].selected ? 'black' : 'grey'}};min-width:{{pageWidth-2*infoLeft}}px;" placeholder="{{mats[index].selected ? '请输入(Please input)' : ''}}"/>
+          <text class="cbitem" auto-height="true" name="mat{{index}}" style="font-size:32rpx">{{item.name}}</text>
+          <input name="mato" wx:if="{{index==mats.length-1}}" bindinput="inputOtherMat" disabled="{{!mats[index].selected}}" style="color:{{mats[index].selected?'black':'grey'}};min-width:{{pageWidth-2*infoLeft}}px;" placeholder="{{mats[index].selected?'请输入(Please input)':''}}"/>
         </checkbox-group>
       </view>
-      <view class="uploader">
+      <view class="section">
         <view class="prompt">采石场名称 (Quarry Name):</view>
-        <input class="userinput" value="{{quarray}}" bindinput="inputQuarry" placeholder="请输入(Please input)" style="min-width:{{pageWidth-2*infoLeft}}px;"/>
+        <input class="userinput" value="{{quarry}}" bindinput="inputQuarry" placeholder="请输入(Please input)" style="min-width:{{pageWidth-2*infoLeft}}px;"/>
       </view>
       <view class="section">
         <view class="prompt">备注 (Notes):</view>
         <input class="userinput" auto-height="true" bindinput="inputNotes" placeholder="如有请输入(Please input if any)" style="min-width:{{pageWidth-2*infoLeft}}px;"/>
       </view>
-      <button class="button" type="primary" formType="submit">提交(Submit)</button>
+      <button class="button" type="primary" formType="submit" disabled="{{!ldVcDone || !ldStDone}}">提交(Submit)</button>
       <button class="button" type="primary" formType="reset">重置(Reset)</button>
     </form>
+  <view class="section"/>
 </view>

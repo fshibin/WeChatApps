@@ -6,7 +6,11 @@ Page({
    */
   data: {
     vehicles: [],
-    newVehicle: null
+    newVehicle: '',
+    pageWidth: 0,
+    infoLeft: 0,
+    checked: false,
+    ldVcDone: false,
   },
 
   onNewVehicle: function(e) {
@@ -16,20 +20,21 @@ Page({
   },
 
   onAddVehicle: function () {
+    if (this.data.newVehicle == '') {
+      getApp().showError('请输入一个车牌号！\nPlease input a plate number!');
+      return;
+    }
+    getApp().showLoading('处理中');
     const db = wx.cloud.database()
     db.collection('vehicles').where({
       pnum: db.RegExp({
         // .replace(/[.*+?^${}()|[\]\\]/g, '\\$&') escapes regex special characters.
-        regexp: this.data.newVehicle.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'),
+        regexp: '^' + this.data.newVehicle.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '$',
         options: 'i',
       }),
     }).count().then(res => {
         if (res.total > 0) {
-          wx.showToast({
-            icon: 'none',
-            title: "已存在Exists!",
-            duration: 3000,
-          }) 
+          getApp().showError("记录已存在！\nRecord already exists!");
         } else {
           db.collection('vehicles').add({
             data: {
@@ -37,17 +42,11 @@ Page({
             },
             success: res => {
               this.onLoad();
-              wx.showToast({
-                title: '添加成功OK!',
-                duration: 3000,
-              })
+              this.setData({newVehicle:''});
+              getApp().showSuccess('添加成功OK!');
             },
             fail: err => {
-              wx.showToast({
-                title: '添加失败Failed!',
-                icon: 'none',
-                duration: 3000,
-              })
+              getApp().showError('添加失败Failed!')
             },
           })
         }
@@ -75,6 +74,11 @@ Page({
         numToDelete++;
       }
     }
+    if (numToDelete == 0) {
+      getApp().showError('请至少选择一个车牌号！\nPlease select at least one plate number!');
+      return;
+    }
+    getApp().showLoading('处理中');
     for (i = 0; i < this.data.vehicles.length; i++) {
       if (this.data.vehicles[i].selected) {
         wx.cloud.callFunction({
@@ -90,49 +94,28 @@ Page({
             if (numResponseGot == numToDelete) { // last one
               if (someSucceeded) this.onLoad();
               if (!someSucceeded) {
-                wx.showToast({
-                  title: '删除失败Failed!',
-                  icon: 'none',
-                  duration: 3000,
-                })
+                getApp().showError('删除失败Failed!');
               } else if (someFailed) {
-                wx.showToast({
-                  title: '部分成功SomeOK!',
-                  icon: 'none',
-                  duration: 3000,
-                })
+                this.setData({checked:false});
+                getApp().showSuccess('部分成功SomeOK!');
               } else {
-                wx.showToast({
-                  title: '删除成功AllOK!',
-                  duration: 3000,
-                })     
+                this.setData({checked:false});
+                getApp().showSuccess('删除成功AllOK!')     
               }
           
             }
           },
           fail: err => {
             someFailed = true;
-            console.error('[云函数] [rmvehicle] 调用失败：', err);
             numResponseGot++;
             if (numResponseGot == numToDelete) { // last one
               if (someSucceeded) this.onLoad();
               if (!someSucceeded) {
-                wx.showToast({
-                  title: '删除失败Failed!',
-                  icon: 'none',
-                  duration: 3000,
-                })
+                getApp().showError('删除失败Failed!');
               } else if (someFailed) {
-                wx.showToast({
-                  title: '部分成功SomeOK!',
-                  icon: 'none',
-                  duration: 3000,
-                })
+                getApp().showSuccess('部分成功SomeOK!');
               } else {
-                wx.showToast({
-                  title: '删除成功OK!',
-                  duration: 3000,
-                })     
+                getApp().showSuccess('删除成功AllOK!')     
               }
             }
           }
@@ -148,7 +131,10 @@ Page({
     const db = wx.cloud.database()
     db.collection('vehicles').get().then(res => {
       this.setData({
+        ldVcDone: true,
         vehicles: res.data,
+        pageWidth: getApp().globalData.pageWidth,
+        infoLeft: getApp().globalData.infoLeft,
       });
     })
   },
@@ -157,60 +143,42 @@ Page({
    * Lifecycle function--Called when page is initially rendered
    */
   onReady: function () {
-
   },
 
   /**
    * Lifecycle function--Called when page show
    */
   onShow: function () {
-    var i;
-    for (i = 0; i < vehicles.length; i++) {
-      var that = this;
-      let id = "#pnum" + i;
-      let query = wx.createSelectorQuery(); //创建查询对象
-      query.select(id).boundingClientRect(); //获取view的边界及位置信息
-      query.exec(function (res) {
-        that.vehicles[i].height = res[0].height + "px";
-        that.setData({
-          vehicles: vehicles,
-        });
-      });
-    }
   },
 
   /**
    * Lifecycle function--Called when page hide
    */
   onHide: function () {
-
   },
 
   /**
    * Lifecycle function--Called when page unload
    */
   onUnload: function () {
-
   },
 
   /**
    * Page event handler function--Called when user drop down
    */
   onPullDownRefresh: function () {
-
   },
 
   /**
    * Called when page reach bottom
    */
   onReachBottom: function () {
-
   },
 
   /**
    * Called when user click on the top right corner to share
    */
   onShareAppMessage: function () {
-
   }
+
 })

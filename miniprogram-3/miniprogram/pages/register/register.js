@@ -17,18 +17,15 @@ Page({
 
   formSubmit(e) {
     if (this.data.driverName == '') {
-      wx.showToast({
-        icon: "none",
-        title: '没有输入名字！Name is not entered!',
-        duration: 3000
-      })
+      getApp().showError('没有输入名字！\nName is not entered!')
       return;
     }
     let that = this;
     wx.showModal({
-      title: '名字注册后不能修改，是否继续？ Your name cann\'t be changed once registered. Continue?',
+      title: '名字注册后不能修改，是否继续？\nYour name can\'t be changed once registered. Continue?',
       confirmText: '确认Yes',
       cancelText: '取消No',
+      mask: true,
       success(res) {
         if (res.confirm) that.addDriver();
       }
@@ -36,6 +33,7 @@ Page({
   },
 
   addDriver : function() {
+    getApp().showLoading('处理中')
     let that = this;
     const db = wx.cloud.database()
     db.collection('drivers').add({
@@ -48,26 +46,16 @@ Page({
       success: function(res) {
         getApp().globalData.driverName = that.data.driverName;
         that.setData({registered: true});
-        wx.showToast({
-          title: '成功！Done!',
-          icon: 'success',
-          duration: 3000,
-        });
-        setTimeout(function () {
-          wx.navigateBack();
-        }, 3000);
+        getApp().showSuccess('成功！Done!');
       },
       fail: function(res) {
-        wx.showToast({
-          title: '无法注册您的名字！Unable to register your name!',
-          duration: 3000,
-          icon: "none"
-        })
+        getApp().showError('无法注册您的名字！\nUnable to register your name!');
       }
     })
   },
 
   formReset(e) {
+    this.data.driverName = '';
   },
 
   /**
@@ -124,4 +112,5 @@ Page({
    */
   onShareAppMessage: function () {
   }
+
 })

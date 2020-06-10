@@ -18,6 +18,7 @@ Page({
     notes: '',
     pageWidth: 0,
     infoLeft: 0,
+    ldVcDone: false,
   },
 
   inputNotes(e) {
@@ -46,104 +47,34 @@ Page({
   },
 
   formSubmit(e) {
-    console.log('start=' + this.data.startTime);
-    console.log('start0=' + this.data.startTime0);
-    console.log('stop=' + this.data.stopTime);
-    console.log('stop0=' + this.data.stopTime0);
-    if (this.data.driverName == '') {
-      wx.showToast({
-        icon: "none",
-        title: '没有输入名字！Name is not entered!',
-        duration: 3000
-      })
-      return;
-    }
     if (this.data.pnums.length == 0) {
-      wx.showToast({
-        icon: "none",
-        title: '没有车辆可选，请联系管理员！ No vehicle to select, contact admin!',
-        duration: 3000
-      })
+      getApp().showError('没有车辆可选，请联系管理员！\nNo vehicle to select, contact admin!');
       return;
     }
     if (this.data.startTime == '' && this.data.stopTime == '') {
-      wx.showToast({
-        icon: "none",
-        title: '必须填写开始时间或结束时间！Must input start time or stop time!',
-        duration: 3000
-      })
+      getApp().showError('必须填写开始时间或结束时间！\nMust input start time or stop time!')
       return;
     } 
     if (this.data.startTime != '' && this.data.stopTime != '' && 
       this.data.startTime.localeCompare(this.data.stopTime) >= 0) {
-      wx.showToast({
-        icon: "none",
-        title: '开始时间必须早于结束时间！Start time must be earlier than stop time!',
-        duration: 3000
-      })
+      getApp().showError('开始时间必须早于结束时间！\nStart time must be earlier than stop time!')
       return;
     }
     let that = this;
-    if (that.data.driverName0 == '') {
+    if (that.data.startTime0 != '' && that.data.startTime != '' && that.data.startTime0 != that.data.startTime) {
       wx.showModal({
-        title: '您是首次使用，名字确认后不能修改，是否继续？ It\'s your first time using; your name cann\'t be changed once confirmed. Continue?',
+        title: '您之前已填写过开工时间，是否修改？\nYour recorded start time before, overwrite it?',
         confirmText: '确认Yes',
         cancelText: '取消No',
-        success(res) {
-          if (res.confirm) {
-            if (that.data.startTime0 != '' && that.data.startTime != '' && that.data.startTime0 != that.data.startTime) {
-              wx.showModal({
-                title: '您之前已填写过开工时间，是否修改？ Your recorded your start time before, overwrite it?',
-                confirmText: '确认Yes',
-                cancelText: '取消No',
-                success(res) {
-                  if (res.confirm) {
-                    if (that.data.stopTime0 != '' && that.data.stopTime != '' && that.data.stopTime0 != that.data.stopTime) {
-                      wx.showModal({
-                        title: '您之前已填写过收工时间，是否修改？ Your recorded stop time before, overwrite it?',
-                        confirmText: '确认Yes',
-                        cancelText: '取消No',
-                        success(res) {
-                          if (res.confirm) {
-                            that.recordWorkTime();
-                          }
-                        }
-                      })
-                    } else {
-                      that.recordWorkTime();
-                    }
-                  }
-                }
-              })
-            } else if (that.data.stopTime0 != '' && that.data.stopTime != '' && that.data.stopTime0 != that.data.stopTime) {
-              wx.showModal({
-                title: '您之前已填写过收工时间，是否修改？ Your recorded stop time before, overwrite it?',
-                confirmText: '确认Yes',
-                cancelText: '取消No',
-                success(res) {
-                  if (res.confirm) {
-                    that.recordWorkTime();
-                  }
-                }
-              })
-            } else {
-              that.recordWorkTime();
-            }
-          }
-        }
-      })
-    } else if (that.data.startTime0 != '' && that.data.startTime != '' && that.data.startTime0 != that.data.startTime) {
-      wx.showModal({
-        title: '您之前已填写过开工时间，是否修改？ Your recorded start time before, overwrite it?',
-        confirmText: '确认Yes',
-        cancelText: '取消No',
+        mask: true,
         success(res) {
           if (res.confirm) {
             if (that.data.stopTime0 != '' && that.data.stopTime != '' && that.data.stopTime0 != that.data.stopTime) {
               wx.showModal({
-                title: '您之前已填写过收工时间，是否修改？ Your recorded stop time before, overwrite it?',
+                title: '您之前已填写过收工时间，是否修改？\nYour recorded stop time before, overwrite it?',
                 confirmText: '确认Yes',
                 cancelText: '取消No',
+                mask: true,
                 success(res) {
                   if (res.confirm) {
                     that.recordWorkTime();
@@ -158,9 +89,10 @@ Page({
       })
     } else if (that.data.stopTime0 != '' && that.data.stopTime != '' && that.data.stopTime0 != that.data.stopTime) {
       wx.showModal({
-        title: '您之前已填写过收工时间，是否修改？ Your recorded stop time before, overwrite it?',
+        title: '您之前已填写过收工时间，是否修改？\nYour recorded stop time before, overwrite it?',
         confirmText: '确认Yes',
         cancelText: '取消No',
+        mask: true,
         success(res) {
           if (res.confirm) {
             that.recordWorkTime();
@@ -169,9 +101,10 @@ Page({
       })
     } else if (that.data.startTime0 == that.data.startTime && that.data.stopTime0 == that.data.stopTime) {
       wx.showToast({
-        title: '您以前记录过相同的工作时间！You recorded the same work time before!',
+        title: '您以前记录过相同的工作时间！\nYou recorded the same work time before!',
         duration: 3000,
-        icon: "none"
+        icon: "none",
+        mask: true,
       })
     } else {
       that.recordWorkTime();
@@ -180,34 +113,13 @@ Page({
   },
 
   recordWorkTime : function() {
-    this.handleDriver();
+    getApp().showLoading('处理中')
+    this.updateDriver();
   },
 
-  handleDriver : function() {
+  updateDriver : function() {
     let that = this;
-    if (that.data.driverName0 == '') {
-      const db = wx.cloud.database()
-      db.collection('drivers').add({
-        data: {
-          name: that.data.driverName,
-          lastUsedPnum: that.data.pnum,
-        },
-        success: function(res) {
-          that.setData({
-            driverName0: that.data.driverName,
-            lastUsedPnum: that.data.lastUsedPnum,
-          })
-          that.handleWTRecord();
-        },
-        fail: function(res) {
-          wx.showToast({
-            title: '无法添加您的信息！Unable to insert your data!',
-            duration: 3000,
-            icon: "none"
-          })
-        }
-      })
-    } else if (that.data.lastUsedPnum != that.data.pnum) {
+    if (that.data.lastUsedPnum != that.data.pnum) {
       wx.cloud.callFunction({
         name: 'updatedriver',
         data: {
@@ -219,21 +131,13 @@ Page({
             that.setData({
               lastUsedPnum: that.data.pnum,
             })
-            that.showSuccess();
+            that.handleWTRecord();
           } else {
-            wx.showToast({
-              title: '数据错误1，请联系管理员！Data error 1, please contact admin!',
-              duration: 3000,
-              icon: "none"
-            })
+            getApp().showError('数据错误1，请联系管理员！\nData error 1, please contact admin!')
           }
         },
         fail: err => {
-          wx.showToast({
-            title: '无法更新您的信息！Unable to update your data!',
-            duration: 3000,
-            icon: "none"
-          })
+          getApp().showError('无法更新您的信息！\nUnable to update your data!');
         }
       })
     } else {
@@ -259,14 +163,10 @@ Page({
             startTime0: that.data.startTime,
             stopTime0: that.data.stopTime,
           })
-          that.showSuccess();
+          getApp().showSuccess('工时记录添加成功！\nWork time record is added successfully!');
         },
         fail: function(res) {
-          wx.showToast({
-            title: '无法添加您的工时信息！Unable to insert your work time data!',
-            duration: 3000,
-            icon: "none"
-          })
+          getApp().showError('无法添加您的工时信息！\nUnable to insert your work time data!');
         }
       })
     } else {
@@ -286,40 +186,16 @@ Page({
               startTime0: that.data.startTime,
               stopTime0: that.data.stopTime,
             })
-            that.showSuccess();
+            getApp().showSuccess('工时记录更新成功！\nWork time record is updated successfully!');
           } else {
-            wx.showToast({
-              title: '数据错误2，请联系管理员！Data error 2, please contact admin!',
-              duration: 3000,
-              icon: "none"
-            })
+            getApp().showError('数据错误2，请联系管理员！\nData error 2, please contact admin!');
           }
         },
         fail: err => {
-          wx.showToast({
-            title: '无法更新您的工时信息！Unable to update your work time data!',
-            duration: 3000,
-            icon: "none"
-          })
+          getApp().showError('无法更新您的工时信息！\nUnable to update your work time data!');
         }
       })
     }
-  },
-
-  showSuccess: function() {
-    wx.showToast({
-      title: '成功！Done!',
-      icon: 'success',
-      duration: 3000
-    })
-  },
-
-  formReset(e) {
-    this.setData({
-      startTime: '',
-      stopTime: '',
-      driverName: this.data.driverName0
-    })
   },
 
   /**
@@ -350,30 +226,27 @@ Page({
       if (res.data.length > 0) {
       var pnums0 = [];
         var i;
+        var lastUsedExists = false;
         for (i = 0; i < res.data.length; i++) {
-          console.log('pnum=' + res.data[i].pnum)
           pnums0.push(res.data[i].pnum);
           if (this.data.lastUsedPnum == res.data[i].pnum) {
             this.setData({pnum: res.data[i].pnum});
+            lastUsedExists = true;
           }
         }
-        console.log('i=' + i)
         this.setData({
           pnums: pnums0,
         });
-        if (this.data.pnum == '') {
+        if (!lastUsedExists || this.data.pnum == '') {
           this.setData({
             pnum: res.data[0].pnum,
           })
         }
       } else {
         // no record found
-        wx.showToast({
-          icon: "none",
-          title: '没有车辆可选，请联系管理员！ No vehicle to select, please contact admin!',
-          duration: 3000
-        })
+        getApp().showError('没有车辆可选，请联系管理员！ No vehicle to select, please contact admin!');
       }
+      this.setData({ldVcDone:true})
     });
   },
 
@@ -391,7 +264,6 @@ Page({
           startTime0: res.data[0].startTime,
           stopTime0: res.data[0].stopTime
         });
-        if (res.data.length > 1) console.warn('More than 1 records found!');
       } else {
         // no record found
         this.setData({
@@ -408,48 +280,42 @@ Page({
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function () {
-
   },
 
   /**
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-
   },
 
   /**
    * 生命周期函数--监听页面隐藏
    */
   onHide: function () {
-
   },
 
   /**
    * 生命周期函数--监听页面卸载
    */
   onUnload: function () {
-
   },
 
   /**
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh: function () {
-
   },
 
   /**
    * 页面上拉触底事件的处理函数
    */
   onReachBottom: function () {
-
   },
 
   /**
    * 用户点击右上角分享
    */
   onShareAppMessage: function () {
-
   }
+
 })

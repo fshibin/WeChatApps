@@ -1,16 +1,18 @@
 <!--pages/addsite/addsite.wxml-->
-<view class="addOrDeleteSite">
-  <label>输入工地地址(Enter Site Address):</label>
-  <input class="textbox" type="text" bindinput="onNewSite"/>
-  <button class="button" bindtap="onAddSite">添加Add</button>
-</view>
-<view class="addOrDeleteSite">
-  <label>选择工地地址(Select Site Address):</label>
-  <view class='listWithCheckBoxes'>
-    <checkbox-group class="listItemWithCheckBox" wx:for="{{sites}}" wx:key="index" bindchange="onCheckboxChange" catchtap="onStopEvent" data-checkid="{{index}}"  style="height:{{item.height}}">
-      <checkbox class="checkbox"></checkbox>
-      <text class="addr" auto-height="true" name="addr{{index}}">{{item.addr}}</text> 
+<view class="page">
+  <view class="section"/>
+  <view class="section">
+    <view class="prompt">输入工地地址(Enter Site Address):</view>
+    <input class="useriput" placeholder="请输入(Please input)" type="text" value="{{newSite}}" bindinput="onNewSite" style="min-width:{{pageWidth-2*infoLeft}}px;"/>
+  </view>
+  <button class="button" bindtap="onAddSite" disabled="{{!ldStDone}}">添加Add</button>
+  <view class="section">
+    <view class="prompt">选择工地地址(Select Site Address):</view>
+    <checkbox-group class="cbgroup" wx:for="{{sites}}" wx:key="index" bindchange="onCheckboxChange" data-checkid="{{index}}" style="max-width:{{pageWidth-2*infoLeft}}px;">
+      <checkbox class="checkbox" checked="{{checked}}"></checkbox>
+      <text class="cbitem" auto-height="true" style="font-size:32rpx">{{item.addr}}</text> 
     </checkbox-group>
   </view>
-  <button class="button" bindtap="onDeleteSite">删除Delete</button>
+  <button class="button" bindtap="onDeleteSite" disabled="{{!ldStDone}}">删除Delete</button>
+  <view class="section"/>
 </view>

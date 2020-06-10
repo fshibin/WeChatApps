@@ -15,6 +15,8 @@ exports.main = async (event, context) => {
     }).update({
       data: {
         lastUsedPnum: event.pnum,
+        lastUsedSite: typeof event.site === 'undefined' ? lastUsedSite : event.site,
+        lastUsedQuarry: typeof event.quarry === 'undefined' ? lastUsedQuarry : event.quarry,
       },
     })
   } catch(e) {

@@ -5,12 +5,10 @@ const app = getApp()
 Page({
 
   data: {
-    time: (new Date()).toDateString(),
-    motto: 'Hello World, today is: ',
     userInfo: {},
     hasUserInfo: false,
     canIUse: wx.canIUse('button.open-type.getUserInfo'),
-    "admin": "Nobody"
+    "admin": "Shibin2"
   },
 
   //事件处理函数
@@ -78,21 +76,24 @@ Page({
       if (res.data.length > 0) {
         app.globalData.driverName = res.data[0].name;
         app.globalData.lastUsedPnum = res.data[0].lastUsedPnum;
-        if (res.data.length > 1) console.warn('More than 1 records found!');
+        app.globalData.lastUsedSite = res.data[0].lastUsedSite;
+        app.globalData.lastUsedQuarry = res.data[0].lastUsedQuarry;
       } else {
         // new driver
         app.globalData.driverName = '';
         app.globalData.lastUsedPnum = '';
+        app.globalData.lastUsedSite = '';
+        app.globalData.lastUsedQuarry = '';
       }
     });
   },
 
   getUserInfo: function(e) {
-    console.log(e)
     app.globalData.userInfo = e.detail.userInfo
     this.setData({
       userInfo: e.detail.userInfo,
       hasUserInfo: true
     })
   }
+
 })
