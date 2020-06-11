@@ -21,6 +21,7 @@ Page({
     startTime: '',
     stopTime: '',
     records: [],
+    dataReturned: [],
     totalTime: '00:00',
     totalMinutes: 0,
     ldDvDone: false,
@@ -193,6 +194,7 @@ Page({
     getApp().showLoading('处理中')
     let that = this;
     that.setData({records:[]});
+    that.setData({dataReturned:[]});
     var i;
     var drivers = [];
     for (i = 0; i < that.data.drivers.length; i++) {
@@ -241,6 +243,7 @@ Page({
           this.setData({
             records: lines,
             totalTime: tt,
+            dataReturned: res.result.data,
           });
           wx.hideLoading({
             complete: (res) => {},
@@ -252,6 +255,56 @@ Page({
       fail: err => {
         getApp().showError('查询失败！query failed!');
       }
+    })
+  },
+
+  onSavePdf: function() {
+    getApp().showLoading('处理中')
+    wx.cloud.callFunction({
+      name: 'generatepdf',
+      data: {
+        site: this.data.site,
+        data: this.data.dataReturned,
+      },
+      success: res => {
+        console.log('1');
+        console.log(res);
+        let fileID = res.result.fileID;
+        wx.cloud.downloadFile({
+          fileID: fileID,
+          success: res => {
+            console.log('2');
+            console.log(res);
+            var filePath = res.tempFilePath;
+            /*wx.saveFile({
+              tempFilePath: filePath,
+              success: res => {
+                console.log('3');
+                console.log(res);
+                getApp().showSuccess('Saved as: ' + res.savedFilePath)
+              }
+            });*/
+            wx.openDocument({
+              filePath: filePath,
+              success: res => {
+                console.log('3');
+                console.log(res);
+                wx.hideLoading({
+                  complete: (res) => {},
+                })
+              }
+            })
+          },
+          fail: err => {
+            console.log(err);
+            getApp().showError('无法保存为PDF！\nUnable to save as PDF!')
+          },
+        });
+      },
+      fail: err => {
+        console.log(err);
+        getApp().showError('无法保存为PDF！\nUnable to save as PDF!')
+      },
     })
   },
 

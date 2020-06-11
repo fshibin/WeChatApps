@@ -52,8 +52,8 @@
         <view class="prompt">备注 (Notes):</view>
         <input class="userinput" auto-height="true" bindinput="inputNotes" placeholder="如有请输入(Please input if any)" style="min-width:{{pageWidth-2*infoLeft}}px;"/>
       </view>
-      <button class="button" type="primary" formType="submit" disabled="{{!ldVcDone || !ldStDone}}">提交(Submit)</button>
-      <button class="button" type="primary" formType="reset">重置(Reset)</button>
+      <button class="button" style="width:100%" type="primary" formType="submit" disabled="{{!ldVcDone || !ldStDone}}">提交(Submit)</button>
+      <button class="button" style="width:100%" type="primary" formType="reset">重置(Reset)</button>
     </form>
   <view class="section"/>
 </view>

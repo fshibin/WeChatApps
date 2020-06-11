@@ -5,7 +5,7 @@
     <view class="prompt">输入工地地址(Enter Site Address):</view>
     <input class="useriput" placeholder="请输入(Please input)" type="text" value="{{newSite}}" bindinput="onNewSite" style="min-width:{{pageWidth-2*infoLeft}}px;"/>
   </view>
-  <button class="button" bindtap="onAddSite" disabled="{{!ldStDone}}">添加Add</button>
+  <button class="button" style="width:100%" bindtap="onAddSite" disabled="{{!ldStDone}}">添加Add</button>
   <view class="section">
     <view class="prompt">选择工地地址(Select Site Address):</view>
     <checkbox-group class="cbgroup" wx:for="{{sites}}" wx:key="index" bindchange="onCheckboxChange" data-checkid="{{index}}" style="max-width:{{pageWidth-2*infoLeft}}px;">
@@ -13,6 +13,6 @@
       <text class="cbitem" auto-height="true">{{item.addr}}</text> 
     </checkbox-group>
   </view>
-  <button class="button" bindtap="onDeleteSite" disabled="{{!ldStDone}}">删除Delete</button>
+  <button class="button" style="width:100%" bindtap="onDeleteSite" disabled="{{!ldStDone}}">删除Delete</button>
   <view class="section"/>
 </view>

@@ -52,12 +52,13 @@
       <text class="cbitem" auto-height="true" style="font-size:32rpx">{{item}}</text> 
     </checkbox-group>
   </view>
-  <button class="button" bindtap="onQuery" disabled="{{!ldDvDone || !ldStDone || !ldVcDone}}">查询(Query)</button>
+  <button class="button" style="width:100%" bindtap="onQuery" disabled="{{!ldDvDone || !ldStDone || !ldVcDone}}">查询(Query)</button>
   <view class="section">
     <view class="prompt">查询结果 (Query Result):</view>
     <text wx:if="{{records.length == 0}}">{{'　'}}</text>
     <text class="aline" wx:for="{{records}}" wx:key="index" style="min-width:{{pageWidth-2*infoLeft}}px;">{{item}}</text>
   </view>
+  <button class="button" style="width:100%" bindtap="onSavePdf" disabled="{{dataReturned.length==0}}">存为PDF</button>
   <view class="section">
     <view class="prompt" style="min-width:{{pageWidth-2*infoLeft}}px;">总时间 (Total Time): {{totalTime}}。</view>
   </view>

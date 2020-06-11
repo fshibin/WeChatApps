@@ -19,7 +19,7 @@
       <view class="userinput" style="min-width:{{pageWidth-2*infoLeft}}px;">{{stopDate?stopDate:'　'}}</view>
     </picker>
   </view>
-  <button class="button" bindtap="onQuery" disabled="{{!loadingDone}}">查询(Query)</button>
+  <button class="button" style="width:100%" bindtap="onQuery" disabled="{{!loadingDone}}">查询(Query)</button>
   <view class="section">
     <view class="prompt">查询结果 (Query Result):</view>
     <text wx:if="{{records.length == 0}}">{{'　'}}</text>

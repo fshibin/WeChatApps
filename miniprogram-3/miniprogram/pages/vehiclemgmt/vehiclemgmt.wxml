@@ -5,7 +5,7 @@
     <view class="prompt">输入车牌号码(Enter Plate Number):</view>
     <input class="userinput" placeholder="请输入(Please input)" type="text" value="{{newVehicle}}" bindinput="onNewVehicle" style="min-width:{{pageWidth-2*infoLeft}}px;"/>
   </view>
-  <button class="button" bindtap="onAddVehicle" disabled="{{!ldVcDone}}">添加Add</button>
+  <button class="button" style="width:100%" bindtap="onAddVehicle" disabled="{{!ldVcDone}}">添加Add</button>
   <view class="section">
     <view class="prompt">选择车牌号码(Select Plate Number):</view>
     <checkbox-group class="cbgroup" wx:for="{{vehicles}}" wx:key="index" bindchange="onCheckboxChange" data-checkid="{{index}}" style="max-width:{{pageWidth-2*infoLeft}}px;">
@@ -13,6 +13,6 @@
       <text class="cbitem" auto-height="true" style="font-size:32rpx">{{item.pnum}}</text> 
     </checkbox-group>
   </view>
-  <button class="button" bindtap="onDeleteVehicle"  disabled="{{!ldVcDone}}">删除Delete</button>
+  <button class="button" style="width:100%" bindtap="onDeleteVehicle"  disabled="{{!ldVcDone}}">删除Delete</button>
   <view class="section"/>
 </view>
