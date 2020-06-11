@@ -100,12 +100,7 @@ Page({
         }
       })
     } else if (that.data.startTime0 == that.data.startTime && that.data.stopTime0 == that.data.stopTime) {
-      wx.showToast({
-        title: '您以前记录过相同的工作时间！\nYou recorded the same work time before!',
-        duration: 3000,
-        icon: "none",
-        mask: true,
-      })
+      getApp().showError('您以前记录过相同的工作时间！\nYou recorded the same work time before!')
     } else {
       that.recordWorkTime();
     }
