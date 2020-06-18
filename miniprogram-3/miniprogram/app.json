@@ -9,7 +9,8 @@
     "pages/driverquery/driverquery",
     "pages/vehicleuse/vehicleuse",
     "pages/register/register",
-    "pages/querysiteuse/querysiteuse"
+    "pages/querysiteuse/querysiteuse",
+    "pages/quarrymgmt/quarrymgmt"
   ],
   "resizable": true,
   "window": {
@@ -26,6 +27,7 @@
   "lastUsedPnum": "",
   "lastUsedSite": "",
   "lastUsedQuarry": "",
+  "lastUsedJobAddr": "",
   "pageWidth": 0,
   "infoLeft": 0
 }

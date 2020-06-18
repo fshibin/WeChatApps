@@ -213,6 +213,8 @@ Page({
     });
     this.loadVehicles();
     this.getWorkTime();
+    console.log(this.data.driverName.charCodeAt(0))
+    console.log(this.data.driverName.charCodeAt(1))
   },
 
   loadVehicles: function() {

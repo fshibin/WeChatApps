@@ -18,6 +18,9 @@ Page({
     sites: [],
     sitesSelected: [],
     site: '',
+    quarries: [],
+    quarriesSelected: [],
+    quarry: '',
     startTime: '',
     stopTime: '',
     records: [],
@@ -27,6 +30,7 @@ Page({
     ldDvDone: false,
     ldStDone: false,
     ldVcDone: false,
+    ldQrDone: false,
   },
 
   changeStartDate : function(e) {
@@ -60,6 +64,15 @@ Page({
       this.data.pnumsSelected[idx] = true;
     } else {
       this.data.pnumsSelected[idx] = false;
+    }
+  },
+
+  onCheckboxChangeQuarry: function(e) {
+    var idx = e.target.dataset.checkid;
+    if (e.detail.value.length == 1) {
+      this.data.quarriesSelected[idx] = true;
+    } else {
+      this.data.quarriesSelected[idx] = false;
     }
   },
 
@@ -122,12 +135,12 @@ Page({
           });
         } else {
           // no record found
-          getApp().showError('没有工作地址可选！\nNo job address to select!');
+          getApp().showError('没有客户可选！\nNo client to select!');
         }
         this.setData({ldStDone: true});
       },
       fail: err => {
-        getApp().showError('获取工地列表时发生错误！\nError occured when getting site list!');
+        getApp().showError('获取客户列表时发生错误！\nError occured when getting client list!');
         this.setData({ldStDone: true});
       }
     });
@@ -160,6 +173,33 @@ Page({
     });
   },
 
+  loadQuarries: function() {
+    const db = wx.cloud.database()
+    db.collection('quarries').where({
+    }).get().then(res => {
+      if (res.data.length > 0) {
+        var quarries0 = [];
+        var i;
+        for (i = 0; i < res.data.length; i++) {
+          quarries0.push(res.data[i].name);
+          this.data.quarriesSelected.push(false);
+        }
+        this.setData({
+          quarries: quarries0,
+        });
+        if (this.data.quarry == '') {
+          this.setData({
+            quarry: res.data[0].name,
+          })
+        }
+      } else {
+        // no record found
+        getApp().showError('没有倒土场可选，请联系管理员！\nNo quarry to select, contact admin!');
+      }
+      this.setData({ldQrDone: true});
+    });
+  },
+
   /**
    * 生命周期函数--监听页面加载
    */
@@ -185,9 +225,10 @@ Page({
       startTime: '00:00',
       stopTime: '23:59',
     });
+    this.loadSites();
     this.loadDrivers();
     this.loadVehicles();
-    this.loadSites();
+    this.loadQuarries();
   },
 
   onQuery: function() {
@@ -196,6 +237,11 @@ Page({
     that.setData({records:[]});
     that.setData({dataReturned:[]});
     var i;
+    var sites = [];
+    //for (i = 0; i < that.data.sites.length; i++) {
+    //  if (that.data.sitesSelected[i]) sites.push(that.data.sites[i]);
+    //}
+    sites.push(that.data.site);
     var drivers = [];
     for (i = 0; i < that.data.drivers.length; i++) {
       if (that.data.driversSelected[i]) drivers.push(that.data.drivers[i]);
@@ -204,21 +250,21 @@ Page({
     for (i = 0; i < that.data.pnums.length; i++) {
       if (that.data.pnumsSelected[i]) pnums.push(that.data.pnums[i]);
     }
-    var sites = [];
-    //for (i = 0; i < that.data.sites.length; i++) {
-    //  if (that.data.sitesSelected[i]) sites.push(that.data.sites[i]);
-    //}
-    sites.push(that.data.site);
+    var quarries = [];
+    for (i = 0; i < that.data.quarries.length; i++) {
+      if (that.data.quarriesSelected[i]) quarries.push(that.data.quarries[i]);
+    }
     wx.cloud.callFunction({
       name: 'querysiteuse',
       data: {
-        drivers: drivers,
+        sites: sites,
         startDate: that.data.startDate,
         stopDate: that.data.stopDate,
-        pnums: pnums,
-        sites: sites,
         startTime: that.data.startTime,
         stopTime: that.data.stopTime,
+        drivers: drivers,
+        pnums: pnums,
+        quarries: quarries,
       },
       success: res => {
         if (res.result != null && res.result.data.length > 0) {
@@ -234,8 +280,10 @@ Page({
             lines.push(line);
             line = '　' + item.pnum + '|' + item.driver;
             lines.push(line);
-            line = '　' + item.goods + '|' + item.quarry + '|' + item.notes;
+            if (item.jobAddr != '') lines.push('　' + item.jobAddr);
+            line = '　' + item.goods + '|' + item.quarry;
             lines.push(line);
+            if (item.notes != '') lines.push('　' + item.notes);
           }
           let h = parseInt(this.data.totalMinutes / 60); // hours
           let m = this.data.totalMinutes % 60; // minutes
@@ -267,28 +315,20 @@ Page({
         data: this.data.dataReturned,
       },
       success: res => {
-        console.log('1');
-        console.log(res);
         let fileID = res.result.fileID;
         wx.cloud.downloadFile({
           fileID: fileID,
           success: res => {
-            console.log('2');
-            console.log(res);
             var filePath = res.tempFilePath;
             /*wx.saveFile({
               tempFilePath: filePath,
               success: res => {
-                console.log('3');
-                console.log(res);
                 getApp().showSuccess('Saved as: ' + res.savedFilePath)
               }
             });*/
             wx.openDocument({
               filePath: filePath,
               success: res => {
-                console.log('3');
-                console.log(res);
                 wx.hideLoading({
                   complete: (res) => {},
                 })

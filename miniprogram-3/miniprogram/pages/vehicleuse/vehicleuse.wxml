@@ -19,10 +19,14 @@
         </picker>
       </view>
       <view class="section">
-        <view class="prompt">工作地址 (Job Address):</view>
+        <view class="prompt">客户名称 (Client Name):</view>
         <picker mode="selector" range="{{sites}}" bindchange="changeSite">
           <view class="userinput" style="font-size:32rpx;min-width:{{pageWidth-2*infoLeft}}px;color:{{pnum?'black':'grey'}}">{{site?site:'请选择(Please select)'}}</view>
         </picker>
+      </view>
+      <view class="section">
+        <view class="prompt">工作地址 (Job Address):</view>
+        <input class="userinput" value="{{jobAddr}}" auto-height="true" bindinput="inputJobAddr" placeholder="不与上同则输入(Input if different from above)" style="font-size:32rpx;min-width:{{pageWidth-2*infoLeft}}px;"/>
       </view>
       <view class="section">
         <view class="prompt">开始时间-时分 (Start Time-HM):</view>
@@ -37,22 +41,28 @@
         </picker>
       </view>
       <view class="section">
-        <view class="prompt">运送物品 (Carried Goods):</view>
-        <checkbox-group class="cbgroup" wx:for="{{mats}}" wx:key="index" bindchange="onCheckboxChange" data-checkid="{{index}}" style="max-width:{{pageWidth-2*infoLeft}}px;">
-          <checkbox class="checkbox"></checkbox>
-          <text class="cbitem" auto-height="true" name="mat{{index}}" style="font-size:32rpx">{{item.name}}</text>
-          <input name="mato" wx:if="{{index==mats.length-1}}" bindinput="inputOtherMat" disabled="{{!mats[index].selected}}" style="color:{{mats[index].selected?'black':'grey'}};min-width:{{pageWidth-2*infoLeft}}px;" placeholder="{{mats[index].selected?'请输入(Please input)':''}}"/>
-        </checkbox-group>
+        <view class="prompt">工作内容 (Work Content):</view>
+        <radio-group class="cbgroup" wx:for="{{mats}}" wx:key="index" bindchange="onRadioChange" data-checkid="{{index}}" style="max-width:{{pageWidth-2*infoLeft}}px;">
+          <radio class="checkbox" disabled="{{item.disabled}}" checked="{{item.name==matSelected}}"></radio>
+          <text class="cbitem" auto-height="true" name="mat{{index}}" style="font-size:32rpx">{{item.name+(index==1?'-钻孔':(index==2?'-挖土':''))}}</text>
+          <input name="mato" wx:if="{{index==mats.length-1}}" bindinput="inputOtherMat" disabled="{{matSelected!='Others'}}" style="color:{{matSelected=='Others'?'black':'grey'}};min-width:{{pageWidth-2*infoLeft}}px;" placeholder="{{matSelected=='Others'?'请输入(Please input)':''}}"/>
+        </radio-group>
       </view>
-      <view class="section">
+      <!--view class="section">
         <view class="prompt">采石场名称 (Quarry Name):</view>
         <input class="userinput" value="{{quarry}}" bindinput="inputQuarry" placeholder="请输入(Please input)" style="min-width:{{pageWidth-2*infoLeft}}px;"/>
+      </view-->
+      <view class="section">
+        <view class="prompt">采石场/倒土场名称 (Quarry Name):</view>
+        <picker mode="selector" range="{{quarries}}" disabled="{{!needQuarry}}" bindchange="changeQuarry">
+          <view class="userinput" style="font-size:32rpx;min-width:{{pageWidth-2*infoLeft}}px;color:{{needQuarry?'black':'grey'}}">{{quarry?quarry:'请选择(Please select)'}}</view>
+        </picker>
       </view>
       <view class="section">
         <view class="prompt">备注 (Notes):</view>
         <input class="userinput" auto-height="true" bindinput="inputNotes" placeholder="如有请输入(Please input if any)" style="min-width:{{pageWidth-2*infoLeft}}px;"/>
       </view>
-      <button class="button" style="width:100%" type="primary" formType="submit" disabled="{{!ldVcDone || !ldStDone}}">提交(Submit)</button>
+      <button class="button" style="width:100%" type="primary" formType="submit" disabled="{{!ldVcDone || !ldStDone || !ldQrDone}}">提交(Submit)</button>
       <button class="button" style="width:100%" type="primary" formType="reset">重置(Reset)</button>
     </form>
   <view class="section"/>

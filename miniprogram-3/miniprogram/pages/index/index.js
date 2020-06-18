@@ -8,7 +8,7 @@ Page({
     userInfo: {},
     hasUserInfo: false,
     canIUse: wx.canIUse('button.open-type.getUserInfo'),
-    "admin": "Shibin"
+    "admin": "Shibin2"
   },
 
   //事件处理函数
@@ -78,12 +78,14 @@ Page({
         app.globalData.lastUsedPnum = res.data[0].lastUsedPnum;
         app.globalData.lastUsedSite = res.data[0].lastUsedSite;
         app.globalData.lastUsedQuarry = res.data[0].lastUsedQuarry;
+        app.globalData.lastUsedJobAddr = res.data[0].lastUsedJobAddr;
       } else {
         // new driver
         app.globalData.driverName = '';
         app.globalData.lastUsedPnum = '';
         app.globalData.lastUsedSite = '';
         app.globalData.lastUsedQuarry = '';
+        app.globalData.lastUsedJobAddr = '';
       }
     });
   },

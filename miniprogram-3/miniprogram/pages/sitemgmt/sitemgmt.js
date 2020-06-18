@@ -23,7 +23,7 @@ Page({
 
   onAddSite: function () {
     if (this.data.newSite == '') {
-      getApp().showError('请输入一个地址！\nPlease input an address!');
+      getApp().showError('请输入一个客户名称！\nPlease input a client name!');
       return;
     }
     getApp().showLoading('处理中');
@@ -77,7 +77,7 @@ Page({
       }
     }
     if (numToDelete == 0) {
-      getApp().showError('请至少选择一个地址！\nPlease select at least one address!');
+      getApp().showError('请至少选择一个客户名称！\nPlease select at least one client name!');
       return;
     }
     getApp().showLoading('处理中');

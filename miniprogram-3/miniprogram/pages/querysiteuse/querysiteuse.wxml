@@ -9,7 +9,7 @@
     </checkbox-group>
   </view-->
   <view class="section">
-    <view class="prompt">选择工地地址(Select Site Address):</view>
+    <view class="prompt">选择客户名称(Select Client Name):</view>
     <picker mode="selector" range="{{sites}}" bindchange="changeSite">
       <view class="userinput" style="font-size:32rpx;min-width:{{pageWidth-2*infoLeft}}px;color:{{pnum?'black':'grey'}}">{{site?site:'请选择(Please select)'}}</view>
     </picker>
@@ -26,7 +26,7 @@
       <view class="userinput" style="min-width:{{pageWidth-2*infoLeft}}px;">{{stopDate?stopDate:'　'}}</view>
     </picker>
   </view>
-  <view class="section">
+  <!--view class="section">
     <view class="prompt">开始时间-时分 (Start Time-HM):</view>
     <picker mode="time" value="{{startTime}}" bindchange="changeStartTime">
       <view class="userinput" style="min-width:{{pageWidth-2*infoLeft}}px;color:{{startTime?'black':'grey'}}">{{startTime?startTime:'请选择(Please select)'}}</view>
@@ -37,7 +37,7 @@
     <picker mode="time" value="{{stopTime}}" bindchange="changeStopTime">
       <view class="userinput" style="min-width:{{pageWidth-2*infoLeft}}px;color:{{stopTime?'black':'grey'}}">{{stopTime?stopTime:'请选择(Please select)'}}</view>
     </picker>
-  </view>
+  </view-->
   <view class="section">
     <view class="prompt">选择司机 (Select Driver):</view>
     <checkbox-group class="cbgroup" wx:for="{{drivers}}" wx:key="index" bindchange="onCheckboxChangeDriver" data-checkid="{{index}}" style="max-width:{{pageWidth-2*infoLeft}}px;">
@@ -52,13 +52,20 @@
       <text class="cbitem" auto-height="true" style="font-size:32rpx">{{item}}</text> 
     </checkbox-group>
   </view>
-  <button class="button" style="width:100%" bindtap="onQuery" disabled="{{!ldDvDone || !ldStDone || !ldVcDone}}">查询(Query)</button>
+  <view class="section">
+    <view class="prompt">选择采石场/倒土场(Select Quarry):</view>
+    <checkbox-group class="cbgroup" wx:for="{{quarries}}" wx:key="index" bindchange="onCheckboxChangeQuarry" data-checkid="{{index}}" style="max-width:{{pageWidth-2*infoLeft}}px;">
+      <checkbox class="checkbox"></checkbox>
+      <text class="cbitem" auto-height="true" style="font-size:32rpx">{{item}}</text> 
+    </checkbox-group>
+  </view>
+  <button class="button" style="width:100%" bindtap="onQuery" disabled="{{!ldDvDone || !ldStDone || !ldVcDone || !ldQrDone}}">查询(Query)</button>
   <view class="section">
     <view class="prompt">查询结果 (Query Result):</view>
     <text wx:if="{{records.length == 0}}">{{'　'}}</text>
     <text class="aline" wx:for="{{records}}" wx:key="index" style="min-width:{{pageWidth-2*infoLeft}}px;">{{item}}</text>
   </view>
-  <button class="button" style="width:100%" bindtap="onSavePdf" disabled="{{dataReturned.length==0}}">存为PDF</button>
+  <button class="button" style="width:100%" bindtap="onSavePdf" disabled="{{dataReturned.length==0}}">生成(Get)PDF</button>
   <view class="section">
     <view class="prompt" style="min-width:{{pageWidth-2*infoLeft}}px;">总时间 (Total Time): {{totalTime}}。</view>
   </view>

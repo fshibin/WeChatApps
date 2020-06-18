@@ -9,15 +9,23 @@ const db = cloud.database()
 
 // 云函数入口函数
 exports.main = async (event, context) => {
+  var data = {
+    lastUsedPnum: event.pnum,
+  }
+  if (typeof event.site === 'undefined') {} else {
+    data.lastUsedSite = event.site;
+  }
+  if (typeof event.quarry === 'undefined') {} else {
+    data.lastUsedQuarry = event.quarry;
+  }
+  if (typeof event.jobAddr === 'undefined') {} else {
+    data.lastUsedJobAddr = event.jobAddr;
+  }
   try {
     return await db.collection('drivers').where({
       _openid: event.openId,
     }).update({
-      data: {
-        lastUsedPnum: event.pnum,
-        lastUsedSite: typeof event.site === 'undefined' ? lastUsedSite : event.site,
-        lastUsedQuarry: typeof event.quarry === 'undefined' ? lastUsedQuarry : event.quarry,
-      },
+      data,
     })
   } catch(e) {
     console.error(e)

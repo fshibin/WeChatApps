@@ -8,12 +8,14 @@ cloud.init({
 })
 
 var totalMinutes = 0;
+var timeInMinutes = 0;
 
 let getDuration = function(s1, s2) {
   let d1 = new Date('2000/01/01 ' + s1 + ':00');
   let d2 = new Date('2000/01/01 ' + s2 + ':00');
   let minutes = parseInt((d2.getTime() - d1.getTime()) / 1000 / 60);
   totalMinutes += minutes;
+  timeInMinutes = minutes;
   let h = parseInt(minutes / 60); // hours
   let m = minutes % 60; // minutes
   let res = '' + (h > 9 ? h : '0' + h) + ':' + (m > 9 ? m : '0' + m);
@@ -33,10 +35,151 @@ exports.main = async (event, context) => {
 
   var doc = new jsPDF()
 
-  doc.setTextColor('#007aff')
-  doc.setFont('CourierNew', 'italic')
-  doc.setFontSize(20)
+  //doc.setTextColor('#007aff')
+  //doc.setFont('CourierNew', 'italic')
+  //doc.setFontSize(20)
 
+  doc.setFontSize(40);
+  doc.text('Koh Brothers Limited', 10, 30)
+  doc.setFontSize(15)
+  doc.text('Client name: ' + event.site, 10, 40)
+  doc.setFontSize(20)
+  doc.setFont('times', 'italic')
+  doc.text('Truck & Digger', 151, 23)
+  doc.text('-Usage Report-', 152, 30)
+  doc.line(10, 45, 200, 45)
+
+  let dateX = 10
+  let pnumX = 30
+  let startTimeX = 50
+  let stopTimeX = 65
+  let durationX = 78
+  let descX = 90
+  let notesX = 120
+  var y = 50
+
+  doc.setFontSize(10)
+  doc.setFont('times', 'bold')
+  doc.text('DATE', dateX, y)
+  doc.text('PLATE#', pnumX, y)
+  doc.text('START', startTimeX, y)
+  doc.text('STOP', stopTimeX, y)
+  doc.text('DUR', durationX, y)
+  doc.text('DESCRIPTION', descX, y)
+  doc.text('JOB ADDRESS / NOTES', notesX, y)
+
+  y += 10
+  doc.setFontSize(10)
+  doc.setFont('times', 'italic')
+  /*
+  doc.text('2020-06-16', dateX, y)
+  doc.text('FZY405(20TON)', pnumX, y)
+  doc.text('09:00', startTimeX, y)
+  doc.text('12:00', stopTimeX, y)
+  doc.text('03h00m', durationX, y)
+  doc.text('Digger Excavation', descX, y)
+  doc.text('This is a note!', noteX, y)
+  */
+
+  let th = 5; // text height
+  let gap = 2; // gap between lines
+  const pw = 210; // page width
+  const ph = 295; // page height
+  const margin = 10; // margin on each side
+
+  var i;
+  for (i = 0; i < event.data.length; i++) {
+    let item = event.data[i];
+    let duration = '00:00';
+    if (item.startTime && item.stopTime) {
+      minutes = 0; // set in getDuration()
+      duration = getDuration(item.startTime, item.stopTime);
+      event.data[i].minutes = minutes;
+    }
+    if (y + th > ph - margin) {
+      doc.addPage('a4')
+      y = margin
+    }
+    doc.text(item.date, dateX, y)
+    doc.text(item.pnum, pnumX, y)
+    doc.text(item.startTime, startTimeX, y)
+    doc.text(item.stopTime, stopTimeX, y)
+    doc.text(duration, durationX, y)
+    doc.text(item.goods, descX, y)
+    if (item.jobAddr != '') {
+      doc.text(item.jobAddr, notesX, y)
+      if (item.notes != '') {
+        y += th
+        if (y + th > ph - margin) {
+          doc.addPage('a4')
+          y = margin
+        }
+        doc.text(item.notes, notesX, y)
+      }
+    } else if (item.notes != '') {
+      doc.text(item.notes, notesX, y)
+    }
+    y += (th + gap)
+  }
+
+  // total
+  var diggers = [];
+  var truck = {time: 0, usage: []};
+
+  // get total usage data
+  for (i = 0; i < event.data.length; i++) {
+    let item = event.data[i];
+    let pos = item.pnum.indexOf('-');
+    if (pos == -1) { // truck
+      truck.time += item.minutes;
+      let j = 0;
+      for (j = 0; j < truck.usage.length; i++) {
+        if (truck.usage[i].goods == item.goods) break;
+      }
+      if (j == truck.usage.length) { // not found
+        truck.usage.push({
+          goods: item.goods,
+          count: 1,
+        })
+      } else {
+        truck.usage[j].count++;
+      }
+    } else { // digger
+      let tons = item.pnum.substr(pos + 1)
+      let j = 0;
+      for (j = 0; j < diggers.length; j++) {
+        if (diggers[i].tons == tons) break;
+      }
+      if (j == diggers.length) { // not found
+        diggers.push({
+          tons: tons,
+          usage: [{
+            goods: item.goods,
+            count: item.goods == 'Digger Transfer' ? 1 : minutes,
+          }],
+        })
+      } else {
+        let du = diggers[i].usage
+        let k = 0;
+        for (k = 0; k < du.length; k++) {
+          if (du[i].goods == item.goods) break;
+        }
+        if (k == du.length) { // not found
+          du.push({
+            goods: item.goods,
+            count: item.goods == 'Digger Transfer' ? 1 : minutes,
+          })
+        } else {
+          du.count += (item.goods == 'Digger Transfer' ? 1 : minutes)
+        }
+      }
+    }
+  }
+
+  // print total usage data
+  
+
+/*
   var i;
   var line;
   var lines = [];
@@ -91,18 +234,18 @@ exports.main = async (event, context) => {
   var height = doc.internal.pageSize.getHeight();
   doc.text('width = ' + width + ', height = ' + height, 10, 50);
   */
-
   var data = doc.output()
-  var buffer = encoding.convert(data, "utf-8")
-
+  //var buffer = encoding.convert(data, "UTF-8")
   return await cloud.uploadFile({
     cloudPath: new Date().getTime() + '.pdf',
-    fileContent: buffer,
+    fileContent: data,
   })
+
   // result: {"fileID":"cloud://helloworld-5dr58.6865-helloworld-5dr58-1302218110/demo.pdf","statusCode":-1,"errMsg":"uploadFile:ok"}
   // npm install --save wx-server-sdk@latest
-  // npm install --save encoding@latest
+  // npm install --save encoding@latest  // 不需要
   // npm install --save jspdf@latest
+
   /*
     Error: errCode: -404011 cloud function execution error | errMsg: cloud.callFunction:fail requestID d3741fba-abcf-11ea-83c2-525400e7bfe4, cloud function service error code -504002, error message ReferenceError: html2pdf is not defined
     at :29470/var/user/node_modules/jspdf/dist/jspdf.min.js:202

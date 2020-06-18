@@ -4,6 +4,8 @@
   <view class="section">
     <view class="prompt">输入车牌号码(Enter Plate Number):</view>
     <input class="userinput" placeholder="请输入(Please input)" type="text" value="{{newVehicle}}" bindinput="onNewVehicle" style="min-width:{{pageWidth-2*infoLeft}}px;"/>
+    <view class="prompt">输入挖土机吨位(Enter Digger Tons):</view>
+    <input class="userinput" placeholder="请输入如1.5T(Please input like 1.5T)" type="text" value="{{tons}}" bindinput="onDiggerTons" style="min-width:{{pageWidth-2*infoLeft}}px;"/>
   </view>
   <button class="button" style="width:100%" bindtap="onAddVehicle" disabled="{{!ldVcDone}}">添加Add</button>
   <view class="section">

@@ -11,69 +11,73 @@ Page({
     pnums: [],
     site: '',
     sites: [],
+    jobAddr: '',
     startTime: '',
     stopTime: '',
     mats: [
       {name: 'Digger Transfer'},
+      {name: 'Drilling Holes'},
+      {name: 'Digger Excavation'},
+      {name: 'Travel Time'},
       {name: 'Dry Clay'}, 
       {name: 'Dir/Wet Mixed'}, 
       {name: 'Rubbish/Mixed'}, 
       {name: 'Concrete'}, 
       {name: 'Top Soil'}, 
-      {name: 'Gap (7, 20, 40, 65, Scoria)'}, 
-      {name: 'Others'}],
+      {name: 'Gap(7)'},
+      {name: 'Gap(20)'},
+      {name: 'Gap(40)'},
+      {name: 'Gap(65)'},
+      {name: 'Gap(Scoria)'}, 
+      {name: 'Others'}
+    ],
     otherMat: '',
-    matsSeleted: '',
+    matSelected: '',
+    matSelectedIdx: -1,
     quarry: '',
+    quarries: [],
+    needQuarry: false,
     notes: '',
 
     lastUsedPnum: '',
     lastUsedSite: '',
     lastUsedQuarry: '',
+    lastUsedJobAddr: '',
       
     pageWidth: 0,
     infoLeft: 0,
 
     ldVcDone: false,
     ldStDone: false,
+    ldQrDone: false,
   },
 
-  onCheckboxChange: function(e) {
+  onRadioChange: function(e) {
     var idx = e.target.dataset.checkid;
-    if (e.detail.value.length == 1) {
-      this.data.mats[idx].selected = true;
+    this.setData({matSelected:this.data.mats[idx].name});
+    this.data.matSelectedIdx = idx;
+    if (idx == 0 || idx == 1 || idx == 2 || idx == 3) {
+      this.setData({needQuarry:false});
     } else {
-      this.data.mats[idx].selected = false;
+      this.setData({needQuarry:true});
     }
-    this.setData({
-      mats: this.data.mats,
-    })
-    this.formSelectedMats();
   },
 
   inputNotes(e) {
     this.setData({ notes: e.detail.value});
   },
 
-  inputOtherMat(e) {
-    this.setData({ otherMat: e.detail.value});
-    this.formSelectedMats();
+  inputJobAddr(e) {
+    this.setData({ jobAddr: e.detail.value
+      .trim() // trim frist & last spaces
+      .replace(/\s+/g, ' ') // compress spaces
+      .replace(/\s*,/g, ',') // no space before comma
+      .replace(/\s*\/\s*/g, '\/'),
+    }); // no space before and after slash
   },
 
-  formSelectedMats: function() {
-    var i;
-    this.data.matsSeleted = '';
-    for (i = 0; i < this.data.mats.length - 1; i++) {
-      if (this.data.mats[i].selected) {
-        this.data.matsSeleted += this.data.mats[i].name;
-        this.data.matsSeleted += ';';
-      }
-    }
-    if (this.data.otherMat != '') {
-      this.data.matsSeleted += 'Others-';
-      this.data.matsSeleted += this.data.otherMat;
-      this.data.matsSeleted += ';';
-    }
+  inputOtherMat(e) {
+    this.setData({ otherMat: e.detail.value});
   },
 
   inputQuarry(e) {
@@ -88,8 +92,32 @@ Page({
     this.setData({ site: this.data.sites[e.detail.value]});
   },
 
+  changeQuarry(e) {
+    this.setData({ quarry: this.data.quarries[e.detail.value]});
+  },
+
   changePnum(e) {
     this.setData({ pnum: this.data.pnums[e.detail.value]});
+    this.switchType(this.data.pnums[e.detail.value]);
+  },
+
+  switchType(pnum) {
+    let i = 0;
+    let idx = this.data.matSelectedIdx;
+    if (pnum.indexOf('-') == -1) { // truck
+      for (i = 0; i < 3; i++) this.data.mats[i].disabled = true;
+      for (i = 3; i < this.data.mats.length; i++) this.data.mats[i].disabled = false;
+      if (this.data.matSelectedIdx < 3) idx = 3;
+    } else {
+      for (i = 0; i < 3; i++) this.data.mats[i].disabled = false;
+      for (i = 3; i < this.data.mats.length; i++) this.data.mats[i].disabled = true;
+      if (this.data.matSelectedIdx >= 3) idx = 0;
+    }
+    this.setData({
+      mats: this.data.mats,
+      matSelected: this.data.mats[idx].name,
+      matSelectedIdx: idx,
+    });
   },
 
   changeDate(e) {
@@ -110,7 +138,7 @@ Page({
       return;
     }
     if (this.data.sites.length == 0) {
-      getApp().showError('没有工地可选，请联系管理员！\nNo site to select, contact admin!');
+      getApp().showError('没有客户可选，请联系管理员！\nNo client to select, contact admin!');
       return;
     }
     if (this.data.startTime == '' || this.data.stopTime == '') {
@@ -122,20 +150,12 @@ Page({
       return;
     }
     if (this.data.mats.length > 0) {
-      var i;
-      var matSelected = false;
-      for (i = 0; i < this.data.mats.length; i++) {
-        if (this.data.mats[i].selected) {
-          matSelected = true;
-          break;
-        }
-      }
-      if (!matSelected) {
-        getApp().showError('必须至少选择一种运送物品！Must select at least one carried goods!');
+      if (this.data.matSelected=='Others' && this.data.otherMat == '') {
+        getApp().showError('没有说明其他是什么！Didn\'t specify what others are!');
         return;
       }
     }
-    if (this.data.quarry == '') {
+    if (this.data.needQuarry && this.data.quarry == '') {
       getApp().showError('必须填写采石场名称！Quarry name must be entered!');
       return;
     }
@@ -178,7 +198,8 @@ Page({
     let that = this;
     if (that.data.lastUsedPnum != that.data.pnum ||
         that.data.lastUsedSite != that.data.site ||
-        that.data.lastUsedQuarry != that.data.quarry) {
+        that.data.lastUsedQuarry != that.data.quarry || 
+        that.data.lastUsedJobAddr != that.data.jobAddr) {
       wx.cloud.callFunction({
         name: 'updatedriver',
         data: {
@@ -186,6 +207,7 @@ Page({
           pnum: that.data.pnum,
           site: that.data.site,
           quarry: that.data.quarry,
+          jobAddr: that.data.jobAddr,
         },
         success: res => {
           if (res.result.stats.updated == 1) {
@@ -213,6 +235,8 @@ Page({
 
   addSURecord : function() {
     let that = this;
+    let mat = that.data.matSelected;
+    if (mat == 'Others') mat = that.data.otherMat;
     const db = wx.cloud.database()
     db.collection('siteuse').add({
       data: {
@@ -220,17 +244,18 @@ Page({
         date: that.data.date,
         pnum: that.data.pnum,
         site: that.data.site,
+        jobAddr: that.data.jobAddr,
         startTime: that.data.startTime,
         stopTime: that.data.stopTime,
-        goods: that.data.matsSeleted,
-        quarry: that.data.quarry,
+        goods: mat,
+        quarry: that.data.needQuarry ? that.data.quarry : '',
         notes: that.data.notes,
       },
       success: function(res) {
-        getApp().showSuccess('工地使用记录添加成功！\nSite use record is added successfully!');
+        getApp().showSuccess('车辆使用记录添加成功！\nSite use record is added successfully!');
       },
       fail: function(res) {
-        getApp().showError('无法添加工地使用记录！\nUnable to insert site use record!');
+        getApp().showError('无法添加车辆使用记录！\nUnable to insert site use record!');
       }
     })
   },
@@ -248,7 +273,7 @@ Page({
       otherMat: '',
       quarry: '',
       notes: '',
-      matsSeleted: '',
+      matSeleted: '',
     })
   },
 
@@ -257,7 +282,7 @@ Page({
    */
   onLoad: function (options) {
     var i;
-    for (i = 0; i < this.data.mats.length; i++) this.data.mats[i].selected = false;
+    for (i = 0; i < this.data.mats.length; i++) this.data.mats[i].disabled = true;
     this.setData({
       driverName: getApp().globalData.driverName,
       lastUsedPnum: getApp().globalData.lastUsedPnum,
@@ -266,11 +291,16 @@ Page({
       site: getApp().globalData.lastUsedSite,
       lastUsedQuarry: getApp().globalData.lastUsedQuarry,
       quarry: getApp().globalData.lastUsedQuarry,
+      lastUsedJobAddr: getApp().globalData.lastUsedJobAddr,
+      jobAddr: getApp().globalData.lastUsedJobAddr,
       date: this.getCurrentDate(),
       mats: this.data.mats,
+      matSelected: this.data.mats[0].name,
+      matSelectedIdx: 0,
     });
     this.loadSites();
     this.loadVehicles();
+    this.loadQuarries();
   },
 
   getCurrentDate: function() {
@@ -342,11 +372,43 @@ Page({
             pnum: res.data[0].pnum,
           })
         }
+        this.switchType(this.data.pnum);
       } else {
         // no record found
         getApp().showError('没有车辆可选，请联系管理员！\nNo vehicle to select, contact admin!');
       }
       this.setData({ldVcDone:true})
+    });
+  },
+
+  loadQuarries: function() {
+    const db = wx.cloud.database()
+    db.collection('quarries').where({
+    }).get().then(res => {
+      if (res.data.length > 0) {
+      var quarries0 = [];
+        var i;
+        var lastUsedExists = false;
+        for (i = 0; i < res.data.length; i++) {
+          quarries0.push(res.data[i].name);
+          if (this.data.lastUsedQuarry == res.data[i].name) {
+            this.setData({quarry: res.data[i].name});
+            lastUsedExists = true;
+          }
+        }
+        this.setData({
+          quarries: quarries0,
+        });
+        if (!lastUsedExists || this.data.quarry == '') {
+          this.setData({
+            quarry: res.data[0].name,
+          })
+        }
+      } else {
+        // no record found
+        getApp().showError('没有采石场/倒土场可选，请联系管理员！\nNo quarry to select, contact admin!');
+      }
+      this.setData({ldQrDone:true})
     });
   },
 

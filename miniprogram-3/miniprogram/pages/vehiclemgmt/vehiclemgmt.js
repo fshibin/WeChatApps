@@ -7,6 +7,7 @@ Page({
   data: {
     vehicles: [],
     newVehicle: '',
+    tons: '',
     pageWidth: 0,
     infoLeft: 0,
     checked: false,
@@ -19,17 +20,25 @@ Page({
       .replace(/\s/g, ''); // remove spaces
   },
 
+  onDiggerTons: function(e) {
+    this.data.tons = e.detail.value
+      .trim() // trim frist & last spaces
+      .replace(/\s/g, ''); // remove spaces
+  },
+
   onAddVehicle: function () {
     if (this.data.newVehicle == '') {
       getApp().showError('请输入一个车牌号！\nPlease input a plate number!');
       return;
     }
     getApp().showLoading('处理中');
+    var newVehicle = this.data.newVehicle;
+    if (this.data.tons != '') newVehicle += ('-' + this.data.tons)
     const db = wx.cloud.database()
     db.collection('vehicles').where({
       pnum: db.RegExp({
         // .replace(/[.*+?^${}()|[\]\\]/g, '\\$&') escapes regex special characters.
-        regexp: '^' + this.data.newVehicle.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '$',
+        regexp: '^' + newVehicle.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '$',
         options: 'i',
       }),
     }).count().then(res => {
@@ -38,11 +47,12 @@ Page({
         } else {
           db.collection('vehicles').add({
             data: {
-              pnum: this.data.newVehicle,
+              pnum: newVehicle,
             },
             success: res => {
               this.onLoad();
               this.setData({newVehicle:''});
+              this.setData({tons:''});
               getApp().showSuccess('添加成功OK!');
             },
             fail: err => {
