@@ -22,6 +22,13 @@ let getDuration = function(s1, s2) {
   return res;
 };
 
+let intToDuration = function(min) {
+  let h = parseInt(min / 60); // hours
+  let m = min % 60; // minutes
+  let res = '' + (h > 9 ? h : '0' + h) + ':' + (m > 9 ? m : '0' + m);
+  return res;
+};
+
 // 云函数入口函数
 exports.main = async (event, context) => {
   // below three lines must be present to avoid jspdf exceptions
@@ -39,6 +46,7 @@ exports.main = async (event, context) => {
   //doc.setFont('CourierNew', 'italic')
   //doc.setFontSize(20)
 
+  // print headers
   doc.setFontSize(40);
   doc.text('Koh Brothers Limited', 10, 30)
   doc.setFontSize(15)
@@ -49,13 +57,14 @@ exports.main = async (event, context) => {
   doc.text('-Usage Report-', 152, 30)
   doc.line(10, 45, 200, 45)
 
+  // print detailed usage
   let dateX = 10
   let pnumX = 30
-  let startTimeX = 50
-  let stopTimeX = 65
-  let durationX = 78
-  let descX = 90
-  let notesX = 120
+  let startTimeX = 52
+  let stopTimeX = 67
+  let durationX = 80
+  let descX = 92
+  let notesX = 122
   var y = 50
 
   doc.setFontSize(10)
@@ -85,16 +94,16 @@ exports.main = async (event, context) => {
   let gap = 2; // gap between lines
   const pw = 210; // page width
   const ph = 295; // page height
-  const margin = 10; // margin on each side
+  const margin = 20; // margin on each side
 
   var i;
   for (i = 0; i < event.data.length; i++) {
     let item = event.data[i];
     let duration = '00:00';
     if (item.startTime && item.stopTime) {
-      minutes = 0; // set in getDuration()
+      timeInMinutes = 0; // set in getDuration()
       duration = getDuration(item.startTime, item.stopTime);
-      event.data[i].minutes = minutes;
+      event.data[i].minutes = timeInMinutes;
     }
     if (y + th > ph - margin) {
       doc.addPage('a4')
@@ -106,25 +115,27 @@ exports.main = async (event, context) => {
     doc.text(item.stopTime, stopTimeX, y)
     doc.text(duration, durationX, y)
     doc.text(item.goods, descX, y)
-    if (item.jobAddr != '') {
-      doc.text(item.jobAddr, notesX, y)
-      if (item.notes != '') {
-        y += th
-        if (y + th > ph - margin) {
-          doc.addPage('a4')
-          y = margin
-        }
-        doc.text(item.notes, notesX, y)
-      }
-    } else if (item.notes != '') {
-      doc.text(item.notes, notesX, y)
+
+    if (item.jobAddr != '') doc.text(item.jobAddr, notesX, y);
+    else if (item.notes != '') doc.text(item.notes, notesX, y);
+    y += th
+    if (y + th > ph - margin) {
+      doc.addPage('a4')
+      y = margin
     }
+    
+    if (item.jobAddr != '' && item.notes != '') doc.text(item.notes, notesX, y);
+
     y += (th + gap)
+    if (y + th > ph - margin) {
+      doc.addPage('a4')
+      y = margin
+    }
   }
 
   // total
   var diggers = [];
-  var truck = {time: 0, usage: []};
+  var truck = {time: 0, loads: 0, usage: []};
 
   // get total usage data
   for (i = 0; i < event.data.length; i++) {
@@ -132,9 +143,11 @@ exports.main = async (event, context) => {
     let pos = item.pnum.indexOf('-');
     if (pos == -1) { // truck
       truck.time += item.minutes;
+      if (item.goods != 'Travel Time') truck.loads++;
+      // if (item.goods == 'Travel Time') continue;
       let j = 0;
-      for (j = 0; j < truck.usage.length; i++) {
-        if (truck.usage[i].goods == item.goods) break;
+      for (j = 0; j < truck.usage.length; j++) {
+        if (truck.usage[j].goods.toUpperCase() == item.goods.toUpperCase()) break;
       }
       if (j == truck.usage.length) { // not found
         truck.usage.push({
@@ -148,36 +161,174 @@ exports.main = async (event, context) => {
       let tons = item.pnum.substr(pos + 1)
       let j = 0;
       for (j = 0; j < diggers.length; j++) {
-        if (diggers[i].tons == tons) break;
+        if (diggers[j].tons == tons) break;
       }
       if (j == diggers.length) { // not found
         diggers.push({
           tons: tons,
           usage: [{
             goods: item.goods,
-            count: item.goods == 'Digger Transfer' ? 1 : minutes,
+            count: item.goods == 'Digger Transfer' ? 1 : item.minutes,
           }],
         })
       } else {
-        let du = diggers[i].usage
+        let du = diggers[j].usage
         let k = 0;
         for (k = 0; k < du.length; k++) {
-          if (du[i].goods == item.goods) break;
+          if (du[k].goods == item.goods) break;
         }
         if (k == du.length) { // not found
           du.push({
             goods: item.goods,
-            count: item.goods == 'Digger Transfer' ? 1 : minutes,
+            count: item.goods == 'Digger Transfer' ? 1 : item.minutes,
           })
         } else {
-          du.count += (item.goods == 'Digger Transfer' ? 1 : minutes)
+          du[k].count += (item.goods == 'Digger Transfer' ? 1 : item.minutes)
         }
       }
     }
   }
 
   // print total usage data
-  
+  let tX = 10;
+  let catX = 10;
+  let col0X = 30;
+  let colGap = 29;
+
+  doc.setFontSize(15)
+  doc.setFont('times', 'bold')
+  doc.text('Total', tX, y)
+  doc.line(10, y + th + gap - 5, 200, y + th + gap - 5)
+
+  if (truck.time > 0 || truck.usage.length > 0) {
+    y += (th + gap)
+    if (y + th > ph - margin) {
+      doc.addPage('a4')
+      y = margin
+    }
+    doc.setFontSize(10)
+    doc.setFont('times', 'bold')
+    let n = 0;
+    let m = 0;
+
+    doc.text('Category', catX, y)
+    doc.text('Total Time', col0X, y)
+    doc.text('Total Loads', col0X + colGap, y)
+    for (n = 0; n < truck.usage.length && n < 4; n++) {
+      let item = truck.usage[n];
+      doc.text(item.goods, col0X + (n + 2) * colGap, y)
+    }
+
+    y += (th + gap) - 2
+    if (y + th > ph - margin) {
+      doc.addPage('a4')
+      y = margin
+    }
+    doc.setFontSize(10)
+    doc.setFont('times', 'normal')
+    doc.text('Truck', catX, y)
+    doc.text(intToDuration(truck.time), col0X, y)
+    doc.text('' + truck.loads, col0X + colGap, y)
+    for (n = 0; n < truck.usage.length && n < 4; n++) {
+      let item = truck.usage[n];
+      if (item.goods == 'Travel Time')
+        doc.text('(' + item.count + ')', col0X + (n + 2) * colGap, y)
+      else
+        doc.text('' + item.count, col0X + (n + 2) * colGap, y)
+    }
+
+    if (truck.usage.length > 4) {
+      y += (th + gap)
+      if (y + th > ph - margin) {
+        doc.addPage('a4')
+        y = margin
+      }
+      doc.setFontSize(10)
+      doc.setFont('times', 'bold')
+      let n = 0;
+      for (n = 4; n < truck.usage.length && n < 10; n++) {
+        let item = truck.usage[n];
+        doc.text(item.goods, col0X + (n - 4) * colGap, y)
+      }
+      y += (th + gap) - 2
+      if (y + th > ph - margin) {
+        doc.addPage('a4')
+        y = margin
+      }
+      doc.setFontSize(10)
+      doc.setFont('times', 'normal')
+      for (n = 4; n < truck.usage.length && n < 10; n++) {
+        let item = truck.usage[n];
+        if (item.goods == 'Travel Time')
+          doc.text('(' + item.count + ')', col0X + (n - 4) * colGap, y)
+        else
+          doc.text('' + item.count, col0X + (n - 4) * colGap, y)
+      }
+    }
+
+    if (truck.usage.length > 10) {
+      y += (th + gap)
+      if (y + th > ph - margin) {
+        doc.addPage('a4')
+        y = margin
+      }
+      doc.setFontSize(10)
+      doc.setFont('times', 'bold')
+      let n = 0;
+      for (n = 10; n < truck.usage.length && n < 16; n++) {
+        let item = truck.usage[n];
+        doc.text(item.goods, col0X + (n - 10) * colGap, y)
+      }
+      y += (th + gap) - 2
+      if (y + th > ph - margin) {
+        doc.addPage('a4')
+        y = margin
+      }
+      doc.setFontSize(10)
+      doc.setFont('times', 'normal')
+      for (n = 10; n < truck.usage.length && n < 16; n++) {
+        let item = truck.usage[n];
+        if (item.goods == 'Travel Time')
+          doc.text('(' + item.count + ')', col0X + (n - 10) * colGap, y)
+        else
+          doc.text('' + item.count, col0X + (n - 10) * colGap, y)
+      }
+    }
+  }
+
+  let di = 0;
+  for (di = 0; di < diggers.length; di++) {
+    y += (th + gap)
+    if (y + th > ph - margin) {
+      doc.addPage('a4')
+      y = margin
+    }
+    doc.setFontSize(10)
+    doc.setFont('times', 'bold')
+    doc.text('Category', catX, y)
+    let item = diggers[di];
+    let ui = 0;
+    for (ui = 0; ui < item.usage.length; ui++) {
+      let item2 = item.usage[ui];
+      doc.text(item2.goods, col0X + ui * colGap, y)
+    }
+    y += (th + gap) - 2
+    if (y + th > ph - margin) {
+      doc.addPage('a4')
+      y = margin
+    }
+    doc.setFontSize(10)
+    doc.setFont('times', 'normal')
+    doc.text('Digger-' + item.tons, catX, y)
+    for (ui = 0; ui < item.usage.length; ui++) {
+      let item2 = item.usage[ui];
+      if (item2.goods == 'Digger Transfer') {
+        doc.text('' + item2.count, col0X + ui * colGap, y)
+      } else {
+        doc.text(intToDuration(item2.count), col0X + ui * colGap, y)
+      }
+    }
+  }
 
 /*
   var i;
@@ -236,8 +387,11 @@ exports.main = async (event, context) => {
   */
   var data = doc.output()
   //var buffer = encoding.convert(data, "UTF-8")
+  var fileName = event.site + '_' + event.startDate + '_' + event.stopDate;
+  fileName = fileName.replace(/[^a-z0-9]/gi, '_').replace(/_+/g, '_');
+  fileName = fileName + '_' + new Date().getTime();
   return await cloud.uploadFile({
-    cloudPath: new Date().getTime() + '.pdf',
+    cloudPath: fileName + '.pdf',
     fileContent: data,
   })
 

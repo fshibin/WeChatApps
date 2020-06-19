@@ -77,7 +77,11 @@ Page({
   },
 
   inputOtherMat(e) {
-    this.setData({ otherMat: e.detail.value});
+    this.setData({ otherMat: e.detail.value
+      .trim() // trim frist & last spaces
+      .replace(/\s+/g, ' ') // compress spaces
+      .toLowerCase()
+    });
   },
 
   inputQuarry(e) {
@@ -210,6 +214,7 @@ Page({
           jobAddr: that.data.jobAddr,
         },
         success: res => {
+          console.log(res)
           if (res.result.stats.updated == 1) {
             that.setData({
               lastUsedPnum: that.data.pnum,

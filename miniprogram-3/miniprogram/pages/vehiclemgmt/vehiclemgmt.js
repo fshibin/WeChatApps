@@ -17,13 +17,15 @@ Page({
   onNewVehicle: function(e) {
     this.data.newVehicle = e.detail.value
       .trim() // trim frist & last spaces
-      .replace(/\s/g, ''); // remove spaces
+      .replace(/\s/g, '') // remove spaces
+      .toUpperCase();
   },
 
   onDiggerTons: function(e) {
     this.data.tons = e.detail.value
       .trim() // trim frist & last spaces
-      .replace(/\s/g, ''); // remove spaces
+      .replace(/\s/g, '') // remove spaces
+      .toUpperCase()
   },
 
   onAddVehicle: function () {

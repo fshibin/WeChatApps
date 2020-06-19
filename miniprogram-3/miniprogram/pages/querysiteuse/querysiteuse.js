@@ -236,6 +236,7 @@ Page({
     let that = this;
     that.setData({records:[]});
     that.setData({dataReturned:[]});
+    that.setData({totalTime: '00:00'})
     var i;
     var sites = [];
     //for (i = 0; i < that.data.sites.length; i++) {
@@ -312,6 +313,8 @@ Page({
       name: 'generatepdf',
       data: {
         site: this.data.site,
+        startDate: this.data.startDate,
+        stopDate: this.data.stopDate,
         data: this.data.dataReturned,
       },
       success: res => {

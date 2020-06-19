@@ -8,7 +8,7 @@ Page({
     userInfo: {},
     hasUserInfo: false,
     canIUse: wx.canIUse('button.open-type.getUserInfo'),
-    "admin": "Shibin2"
+    "admin": "Shibin"
   },
 
   //事件处理函数

@@ -18,7 +18,7 @@ exports.main = async (event, context) => {
       stopTime: _.lte(event.stopTime),
       driver: event.drivers.length > 0 ? _.in(event.drivers) : _.neq(''),
       pnum: event.pnums.length > 0 ? _.in(event.pnums) : _.neq(''),
-      quarry: event.quarries.length > 0 ? _.in(event.quarries) : _.neq(''),
+      quarry: event.quarries.length > 0 ? _.in(event.quarries) : _.neq(' '), // quarry cann't be a space ' '
     }).get();
   } catch(e) {
     console.error(e)
