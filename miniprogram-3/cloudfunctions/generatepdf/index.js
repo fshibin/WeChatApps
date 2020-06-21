@@ -52,7 +52,7 @@ exports.main = async (event, context) => {
   doc.setFontSize(15)
   doc.text('Client name: ' + event.site, 10, 40)
   doc.setFontSize(20)
-  doc.setFont('times', 'italic')
+  doc.setFont('times', 'normal')
   doc.text('Truck & Digger', 151, 23)
   doc.text('-Usage Report-', 152, 30)
   doc.line(10, 45, 200, 45)
@@ -79,7 +79,7 @@ exports.main = async (event, context) => {
 
   y += 10
   doc.setFontSize(10)
-  doc.setFont('times', 'italic')
+  doc.setFont('times', 'normal')
   /*
   doc.text('2020-06-16', dateX, y)
   doc.text('FZY405(20TON)', pnumX, y)
@@ -387,7 +387,7 @@ exports.main = async (event, context) => {
   */
   var data = doc.output()
   //var buffer = encoding.convert(data, "UTF-8")
-  var fileName = event.site + '_' + event.startDate + '_' + event.stopDate;
+  var fileName = event.site + '_' + event.startDate + '_TO_' + event.stopDate;
   fileName = fileName.replace(/[^a-z0-9]/gi, '_').replace(/_+/g, '_');
   fileName = fileName + '_' + new Date().getTime();
   return await cloud.uploadFile({

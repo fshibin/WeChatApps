@@ -18,13 +18,13 @@
     </navigator>
   </view>
   <view class="section">
-    <navigator url="../querysiteuse/querysiteuse" open-type="navigate" class="menuitem" style="min-width:{{pageWidth-2*infoLeft}}px;">
-      <text>查询客户用车情况(Query Client Usage)</text>
+    <navigator url="../driverquery/driverquery" open-type="navigate" class="menuitem" style="min-width:{{pageWidth-2*infoLeft}}px;">
+      <text>查询司机工作时间(Query Driver Worktime)</text>
     </navigator>
   </view>
   <view class="section">
-    <navigator url="../driverquery/driverquery" open-type="navigate" class="menuitem" style="min-width:{{pageWidth-2*infoLeft}}px;">
-      <text>查询司机工作时间(Query Driver Worktime)</text>
+    <navigator url="../querysiteuse/querysiteuse" open-type="navigate" class="menuitem" style="min-width:{{pageWidth-2*infoLeft}}px;">
+      <text>查询客户用车情况(Query Client T&D Usage)</text>
     </navigator>
   </view>
   <view class="section"/>

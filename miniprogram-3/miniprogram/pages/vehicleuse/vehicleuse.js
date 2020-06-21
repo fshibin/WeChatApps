@@ -174,18 +174,18 @@ Page({
     const _ = db.command;
     db.collection('siteuse').where(_.or([
       {
-        driver: this.data.driverName,
+        pnum: this.data.pnum,
         date: this.data.date,
         startTime: _.lte(this.data.startTime),
         stopTime: _.gte(this.data.stopTime),
       },
       {
-        driver: this.data.driverName,
+        pnum: this.data.pnum,
         date: this.data.date,
         startTime: _.lt(this.data.stopTime).and(_.gte(this.data.startTime)),
       },
       {
-        driver: this.data.driverName,
+        pnum: this.data.pnum,
         date: this.data.date,
         stopTime: _.gt(this.data.startTime).and(_.lte(this.data.stopTime)),
       }

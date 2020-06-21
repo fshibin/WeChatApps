@@ -69,6 +69,7 @@ Page({
           let ln = item.date + '|' + (item.startTime ? item.startTime : '??:??') +
             '-' + (item.stopTime ? item.stopTime : '??:??') + '=>' + duration + '|' + item.pnum;
           lines.push(ln);
+          if (item.notes != '') lines.push('　' + item.notes);
         }
         let h = parseInt(this.data.totalMinutes / 60); // hours
         let m = this.data.totalMinutes % 60; // minutes

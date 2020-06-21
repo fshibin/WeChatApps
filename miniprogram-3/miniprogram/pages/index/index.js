@@ -52,9 +52,6 @@ Page({
       })
     }
     this.getOpenId();
-    if (this.data.userInfo.nickName != this.data.admin) {
-      this.getDriverInfo();
-    }
   },
 
   // 获取用户openid
@@ -64,6 +61,9 @@ Page({
       data: {},
       success: res => {
         app.globalData.openId = res.result;
+        if (this.data.userInfo.nickName != this.data.admin) {
+          this.getDriverInfo();
+        }
       }
     })
   },

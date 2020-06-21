@@ -282,7 +282,7 @@ Page({
             line = '　' + item.pnum + '|' + item.driver;
             lines.push(line);
             if (item.jobAddr != '') lines.push('　' + item.jobAddr);
-            line = '　' + item.goods + '|' + item.quarry;
+            line = '　' + item.goods + (item.quarry != '' ? '|' + item.quarry : '');
             lines.push(line);
             if (item.notes != '') lines.push('　' + item.notes);
           }

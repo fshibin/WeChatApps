@@ -13,7 +13,7 @@
   </view>
   <view class="section" wx:if="{{driverName}}">
     <navigator url="../vehicleuse/vehicleuse" open-type="navigate" class="menuitem" style="min-width:{{pageWidth-2*infoLeft}}px;">
-      <text>记录工地用车(Record Site Vehicle Use)</text>
+      <text>记录客户用车(Record Client Vehicle Use)</text>
     </navigator>
   </view>
   <view class="section" wx:if="{{driverName}}">
