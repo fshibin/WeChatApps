@@ -1,0 +1,41 @@
+<!--miniprogram/pages/worktime/worktime.wxml-->
+<view class="page">
+  <view class="section"/>
+    <form class="form" catchsubmit="formSubmit" catchreset="formReset">
+      <view class="section">
+        <view class="prompt">您的名字 (Your Name):</view>
+        <input class="userinput" value="{{driverName}}" disabled="{{driverName0}}" style="min-width:{{pageWidth-2*infoLeft}}px;color:{{driverName0?'grey':'black'}}" bindinput="inputName"/>
+      </view>
+      <view class="section">
+        <view class="prompt">日期-年月日 (Date-YMD):</view>
+        <picker mode="date" value="{{date}}" bindchange="changeDate">
+          <view class="userinput" style="min-width:{{pageWidth-2*infoLeft}}px;color:{{date?'black':'grey'}}">{{date}}</view>
+        </picker>
+      </view>
+      <view class="section">
+        <view class="prompt">车牌号码 (Plate Number):</view>
+        <picker mode="selector" range="{{pnums}}" bindchange="changePnum">
+          <view class="userinput" style="min-width:{{pageWidth-2*infoLeft}}px;color:{{pnum?'black':'grey'}}">{{pnum?pnum:'请选择(Please select)'}}</view>
+        </picker>
+      </view>
+      <view class="section">
+        <view class="prompt">开工时间-时分 (Start Time-HM):</view>
+        <picker mode="time" value="{{startTime}}" bindchange="changeStartTime">
+          <view class="userinput" style="min-width:{{pageWidth-2*infoLeft}}px;color:{{startTime?'black':'grey'}}">{{startTime?startTime:'请选择(Please select)'}}</view>
+        </picker>
+      </view>
+      <view class="section">
+        <view class="prompt">收工时间-时分 (Stop Time-HM):</view>
+        <picker mode="time" value="{{stopTime}}" bindchange="changeStopTime">
+          <view class="userinput" style="min-width:{{pageWidth-2*infoLeft}}px;color:{{stopTime?'black':'grey'}}">{{stopTime?stopTime:'请选择(Please select)'}}</view>
+        </picker>
+      </view>
+      <view class="section">
+        <view class="prompt">备注 (Notes):</view>
+        <input class="userinput" value="{{notes}}" bindinput="inputNotes" placeholder="如有请输入(Please input if any)" style="min-width:{{pageWidth-2*infoLeft}}px;"/>
+      </view>
+      <button class="button" style="width:100%" type="primary" formType="submit" disabled="{{!ldVcDone}}">提交(Submit)</button>
+      <button class="button" style="width:100%" type="primary" formType="reset" disabled="{{!ldVcDone}}">重置(Reset)</button>
+    </form>
+  <view class="section"/>
+</view>

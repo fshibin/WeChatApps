@@ -1,0 +1,19 @@
+<!--miniprogram/quarrymgmt/quarrymgmt.wxml-->
+<view class="page">
+  <view class="section"/>
+  <view class="section">
+    <view class="prompt">输入采石场/倒土场名称(Enter Quarry Name):</view>
+    <input class="useriput" placeholder="请输入(Please input)" type="text" value="{{newQuarry}}" bindinput="onNewQuarry" style="min-width:{{pageWidth-2*infoLeft}}px;"/>
+  </view>
+  <button class="button" style="width:100%" bindtap="onAddQuarry" disabled="{{!ldQrDone}}">添加Add</button>
+  <view class="section">
+    <view class="prompt">选择采石场/倒土场名称(Select Quarry Name):</view>
+    <checkbox-group class="cbgroup" wx:for="{{quarries}}" wx:key="index" bindchange="onCheckboxChange" data-checkid="{{index}}" style="max-width:{{pageWidth-2*infoLeft}}px;">
+      <checkbox class="checkbox" checked="{{checked}}"></checkbox>
+      <text class="cbitem" auto-height="true">{{item.name}}</text> 
+    </checkbox-group>
+  </view>
+  <button class="button" style="width:100%" bindtap="onDeleteQuarry" disabled="{{!ldQrDone}}">删除Delete</button>
+  <view class="section"/>
+</view>
+

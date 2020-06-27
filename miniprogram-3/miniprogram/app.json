@@ -10,7 +10,8 @@
     "pages/vehicleuse/vehicleuse",
     "pages/register/register",
     "pages/querysiteuse/querysiteuse",
-    "pages/quarrymgmt/quarrymgmt"
+    "pages/quarrymgmt/quarrymgmt",
+    "pages/updatevehicleuse/updatevehicleuse"
   ],
   "resizable": true,
   "window": {

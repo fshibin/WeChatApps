@@ -1,0 +1,32 @@
+<!--pages/driverquery/driverquery.wxml-->
+<view class="page">
+  <view class="section"/>
+  <view class="section">
+    <view class="prompt">司机的名字 (Driver's Name):</view>
+    <picker mode="selector" range="{{drivers}}" bindchange="changeDriver">
+      <view class="userinput" style="min-width:{{pageWidth-2*infoLeft}}px;">{{driver?driver:'请选择(Please select)'}}</view>
+    </picker>
+  </view>
+  <view class="section">
+    <view class="prompt">开始日期-年月日 (Start Date-YMD):</view>
+    <picker mode="date" value="{{startDate}}" bindchange="changeStartDate">
+      <view class="userinput" style="min-width:{{pageWidth-2*infoLeft}}px;">{{startDate?startDate:'　'}}</view>
+    </picker>
+  </view>
+  <view class="section">
+    <view class="prompt">结束日期-年月日 (Stop Date-YMD):</view>
+    <picker mode="date" value="{{stopDate}}" bindchange="changeStopDate">
+      <view class="userinput" style="min-width:{{pageWidth-2*infoLeft}}px;">{{stopDate?stopDate:'　'}}</view>
+    </picker>
+  </view>
+  <button class="button" style="width:100%" bindtap="onQuery" disabled="{{!loadingDone}}">查询(Query)</button>
+  <view class="section">
+    <view class="prompt">查询结果 (Query Result):</view>
+    <text wx:if="{{records.length == 0}}">{{'　'}}</text>
+    <text class="aline" wx:for="{{records}}" wx:key="index" style="min-width:{{pageWidth-2*infoLeft}}px;">{{item}}</text>
+  </view>
+  <view class="section">
+    <view class="prompt" style="min-width:{{pageWidth-2*infoLeft}}px;">总时间 (Total Time): {{totalTime}}。</view>
+  </view>
+  <view class="section"/>
+</view>

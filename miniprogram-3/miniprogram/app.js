@@ -31,6 +31,20 @@ App({
     })
   },
 
+  showErrorCallback: function(msg, cb) {
+    wx.hideLoading({
+      complete: (res) => {
+      },
+    })
+    wx.showModal({
+      title: '错误Error!',
+      content: msg,
+      showCancel: false,
+      mask: true,
+      success: cb,
+    })
+  },
+
   showSuccess: function(msg) {
     wx.hideLoading({
       complete: (res) => {
@@ -41,6 +55,20 @@ App({
       content: msg,
       showCancel: false,
       mask: true,
+    })
+  },
+
+  showSuccessCallback: function(msg, cb) {
+    wx.hideLoading({
+      complete: (res) => {
+      },
+    })
+    wx.showModal({
+      title: '成功Success!',
+      content: msg,
+      showCancel: false,
+      mask: true,
+      success: cb,
     })
   },
 

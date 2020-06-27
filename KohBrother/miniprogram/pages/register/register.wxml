@@ -1,0 +1,13 @@
+<!--miniprogram/pages/register/register.wxml-->
+<view class="page">
+  <view class="section"/>
+  <form class="form" catchsubmit="formSubmit" catchreset="formReset">
+    <view class="section">
+      <view class="prompt">您的名字 (Your Name):</view>
+      <input class="userinput" disabled="{{registered}}" placeholder="请输入(Please input)" value="{{driverName}}" bindinput="inputName" style="min-width:{{pageWidth-2*infoLeft}}px;color:{{registered?'grey':'black'}};"/>
+    </view>
+    <button class="button" style="width:100%" disabled="{{registered}}" type="primary" formType="submit">提交(Submit)</button>
+    <button class="button" style="width:100%" disabled="{{registered}}" type="primary" formType="reset">重置(Reset)</button>
+  </form>
+  <view class="section"/>
+</view>

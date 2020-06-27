@@ -1,0 +1,31 @@
+<!--miniprogram/pages/adminmenu/adminmenu.wxml-->
+<!--text>miniprogram/pages/adminmenu/adminmenu.wxml</text-->
+<view class="page" id="page">
+  <view class="section"/>
+  <view class="section">
+    <navigator url="../sitemgmt/sitemgmt" open-type="navigate" class="menuitem" style="min-width:{{pageWidth-2*infoLeft}}px;">
+      <text id="info0">客户管理(Client Management)</text>
+    </navigator>
+  </view>
+  <view class="section">
+    <navigator url="../vehiclemgmt/vehiclemgmt" open-type="navigate" class="menuitem" style="min-width:{{pageWidth-2*infoLeft}}px;">
+      <text>车辆管理(Vehicle Management)</text>
+    </navigator>
+  </view>
+  <view class="section">
+    <navigator url="../quarrymgmt/quarrymgmt" open-type="navigate" class="menuitem" style="min-width:{{pageWidth-2*infoLeft}}px;">
+      <text>采石场/倒土场管理(Quarry Management)</text>
+    </navigator>
+  </view>
+  <view class="section">
+    <navigator url="../driverquery/driverquery" open-type="navigate" class="menuitem" style="min-width:{{pageWidth-2*infoLeft}}px;">
+      <text>查询司机工作时间(Query Driver Worktime)</text>
+    </navigator>
+  </view>
+  <view class="section">
+    <navigator url="../querysiteuse/querysiteuse" open-type="navigate" class="menuitem" style="min-width:{{pageWidth-2*infoLeft}}px;">
+      <text>查询客户用车情况(Query Client T&D Usage)</text>
+    </navigator>
+  </view>
+  <view class="section"/>
+</view>

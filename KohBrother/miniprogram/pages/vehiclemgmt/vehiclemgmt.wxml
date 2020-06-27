@@ -1,0 +1,20 @@
+<!--pages/vehiclemgmt/vehiclemgmt.wxml-->
+<view class="page">
+  <view class="section"/>
+  <view class="section">
+    <view class="prompt">输入车牌号码(Enter Plate Number):</view>
+    <input class="userinput" placeholder="请输入(Please input)" type="text" value="{{newVehicle}}" bindinput="onNewVehicle" style="min-width:{{pageWidth-2*infoLeft}}px;"/>
+    <view class="prompt">输入挖土机吨位(Enter Digger Tons):</view>
+    <input class="userinput" placeholder="请输入如1.5T(Please input like 1.5T)" type="text" value="{{tons}}" bindinput="onDiggerTons" style="min-width:{{pageWidth-2*infoLeft}}px;"/>
+  </view>
+  <button class="button" style="width:100%" bindtap="onAddVehicle" disabled="{{!ldVcDone}}">添加Add</button>
+  <view class="section">
+    <view class="prompt">选择车牌号码(Select Plate Number):</view>
+    <checkbox-group class="cbgroup" wx:for="{{vehicles}}" wx:key="index" bindchange="onCheckboxChange" data-checkid="{{index}}" style="max-width:{{pageWidth-2*infoLeft}}px;">
+      <checkbox class="checkbox" checked="{{checked}}"></checkbox>
+      <text class="cbitem" auto-height="true" style="font-size:32rpx">{{item.pnum}}</text> 
+    </checkbox-group>
+  </view>
+  <button class="button" style="width:100%" bindtap="onDeleteVehicle"  disabled="{{!ldVcDone}}">删除Delete</button>
+  <view class="section"/>
+</view>
