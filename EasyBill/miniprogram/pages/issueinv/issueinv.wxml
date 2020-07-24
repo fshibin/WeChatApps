@@ -1,0 +1,47 @@
+<!--miniprogram/pages/issueinv/issueinv.wxml-->
+<view class="page" id="page">
+  <view class="section"/>
+  <view class="section">
+    <view class="prompt">选择一个客户(Select A Client)*:</view>
+    <picker mode="selector" range="{{clientNames}}" bindchange="changeclient" disabled="{{invoiceId!=''}}">
+      <view style="color:{{client!=''?'black':'grey'}};min-width:{{pageWidth-2*infoLeft}}px;">{{client?client:'请选择(Please select)'}}</view>
+    </picker>
+  </view>
+  <view class="section">
+    <view>条目(Items)</view>
+    <view class="prompt">描述(Description)*:</view>
+    <input class="useriput" placeholder="请输入(Please input)" type="text" value="{{desc}}" bindinput="onDesc" style="color:{{invoiceId==''?'black':'grey'}};min-width:{{pageWidth-2*infoLeft}}px;" disabled="{{invoiceId!=''}}"/>
+    <view class="prompt">单价(Unit Price)*:</view>
+    <input class="useriput" placeholder="请输入数字(Please input number)" type="text" value="{{price}}" bindinput="onPrice" style="color:{{invoiceId==''?'black':'grey'}};min-width:{{pageWidth-2*infoLeft}}px;" disabled="{{invoiceId!=''}}"/>
+    <view class="prompt">数量(Quantity)*:</view>
+    <input class="useriput" placeholder="请输入数字(Please input number)" type="text" value="{{qty}}" bindinput="onQty" style="color:{{invoiceId==''?'black':'grey'}};min-width:{{pageWidth-2*infoLeft}}px;" disabled="{{invoiceId!=''}}"/>
+  </view>
+  <button class="button" style="width:100%" bindtap="onReset">重置Reset</button>
+  <button class="button" style="width:100%" bindtap="onCommit" disabled="{{invoiceId!=''}}">{{isAdding?'添加Add':'修改Update'}}</button>
+  <view class="section">
+    <view class="prompt">选择一个条目(Select An Item):</view>
+    <checkbox-group class="cbgroup" wx:for="{{items}}" wx:key="index" bindchange="onCheckboxChange" data-checkid="{{index}}" style="max-width:{{pageWidth-2*infoLeft}}px;">
+      <checkbox class="checkbox" checked="{{checked}}"></checkbox>
+      <text class="cbitem" auto-height="true">{{item.desc}}</text>
+    </checkbox-group>
+  </view>
+  <button class="button" style="width:100%" bindtap="onChange">载入Load</button>
+  <button class="button" style="width:100%" bindtap="onDelete" disabled="{{invoiceId!=''}}">删除Delete</button>
+  <view class="section"/>
+  <view class="section">
+    <checkbox-group bindchange="onGst">
+      <checkbox class="prompt" checked="{{checkedGst}}" disabled="{{invoiceId!=''}}">单价包含GST</checkbox>
+    </checkbox-group>
+    <view class="prompt" style="min-width:{{pageWidth-2*infoLeft}}px;">总计价格(Total Price): ${{totalPrice}}</view>
+    <view class="prompt">已付金额(Paid Amount):</view>
+    <input class="useriput" placeholder="请输入数字(Please input number)" type="text" value="{{paid}}" bindinput="onPaid" style="color:{{invoiceId==''?'black':'grey'}};min-width:{{pageWidth-2*infoLeft}}px;" disabled="{{invoiceId!=''}}"/>
+  </view>
+  <button class="button" style="width:100%" bindtap="onGenerate" disabled="{{client==''||items.length==0||invoiceId!=''}}">生成发票</button>
+  <view class="section">
+    <view class="prompt" style="min-width:{{pageWidth-2*infoLeft}}px;">发票号码(Invoice ID): {{invoiceId==''?'':invoiceId}}</view>
+  </view>
+  <button class="button" style="width:100%" bindtap="onOpenPdf" disabled="{{invoiceId==''}}">打开发票</button>
+  <button class="button" style="width:100%" bindtap="onResetAll">全部重置</button>
+  <view class="section"/>
+</view>
+

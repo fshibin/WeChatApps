@@ -1,0 +1,22 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/mainmenu/mainmenu",
+    "pages/clientmgmt/clientmgmt",
+    "pages/issueinv/issueinv",
+    "pages/invmgmt/invmgmt"
+  ],
+  "resizable": true,
+  "window": {
+    "backgroundColor": "#F6F6F6",
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#00F",
+    "navigationBarTitleText": "EasyBill",
+    "navigationBarTextStyle": "black"
+  },
+  "sitemapLocation": "sitemap.json",
+  "style": "v2",
+  "openId": "",
+  "pageWidth": 0,
+  "infoLeft": 0
+}

@@ -1,0 +1,26 @@
+<!--pages/clientmgmt/clientmgmt.wxml-->
+<view class="page">
+  <view class="section"/>
+  <view class="section">
+    <view class="prompt">名称(Name)*:</view>
+    <input class="useriput" placeholder="请输入(Please input)" type="text" value="{{name}}" bindinput="onName" style="min-width:{{pageWidth-2*infoLeft}}px;"/>
+    <view class="prompt">地址(Address):</view>
+    <input class="useriput" placeholder="请输入(Please input)" type="text" value="{{addr}}" bindinput="onAddr" style="min-width:{{pageWidth-2*infoLeft}}px;"/>
+    <view class="prompt">电话(Phone):</view>
+    <input class="useriput" placeholder="请输入(Please input)" type="text" value="{{phone}}" bindinput="onPhone" style="min-width:{{pageWidth-2*infoLeft}}px;"/>
+    <view class="prompt">邮件(Email):</view>
+    <input class="useriput" placeholder="请输入(Please input)" type="text" value="{{email}}" bindinput="onEmail" style="min-width:{{pageWidth-2*infoLeft}}px;"/>
+  </view>
+  <button class="button" style="width:100%" bindtap="onReset" disabled="{{!ldCtDone}}">重置Reset</button>
+  <button class="button" style="width:100%" bindtap="onCommit" disabled="{{!ldCtDone}}">{{isAdding?'添加Add':'修改Update'}}</button>
+  <view class="section">
+    <view class="prompt">选择一个客户(Select A Client):</view>
+    <checkbox-group class="cbgroup" wx:for="{{clients}}" wx:key="index" bindchange="onCheckboxChange" data-checkid="{{index}}" style="max-width:{{pageWidth-2*infoLeft}}px;">
+      <checkbox class="checkbox" checked="{{checked}}"></checkbox>
+      <text class="cbitem" auto-height="true">{{item.name}}</text>
+    </checkbox-group>
+  </view>
+  <button class="button" style="width:100%" bindtap="onChange" disabled="{{!ldCtDone}}">载入Load</button>
+  <button class="button" style="width:100%" bindtap="onDelete" disabled="{{!ldCtDone}}">删除Delete</button>
+  <view class="section"/>
+</view>

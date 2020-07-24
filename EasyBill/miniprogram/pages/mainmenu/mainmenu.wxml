@@ -1,0 +1,40 @@
+<!--miniprogram/pages/adminmenu/adminmenu.wxml-->
+<!--text>miniprogram/pages/adminmenu/adminmenu.wxml</text-->
+<view class="page" id="page">
+  <view class="section"/>
+  <view class="section">
+    <navigator url="../clientmgmt/clientmgmt" open-type="navigate" class="menuitem" style="min-width:{{pageWidth-2*infoLeft}}px;">
+      <text id="info0">客户管理 (Client Management)</text>
+    </navigator>
+  </view>
+  <view class="section">
+    <navigator url="../issueinv/issueinv" open-type="navigate" class="menuitem" style="min-width:{{pageWidth-2*infoLeft}}px;">
+      <text>开具发票 (Issue Invoice)</text>
+    </navigator>
+  </view>
+  <view class="section">
+    <navigator url="../invmgmt/invmgmt" open-type="navigate" class="menuitem" style="min-width:{{pageWidth-2*infoLeft}}px;">
+      <text>发票管理 (Invoice Management)</text>
+    </navigator>
+  </view>
+  <!--view class="section">
+    <navigator url="../issuerec/issuerec" open-type="navigate" class="menuitem" style="min-width:{{pageWidth-2*infoLeft}}px;">
+      <text>开具收据 (Issue Receipt)</text>
+    </navigator>
+  </view>
+  <view class="section">
+    <navigator url="../recmgmt/recmgmt" open-type="navigate" class="menuitem" style="min-width:{{pageWidth-2*infoLeft}}px;">
+      <text>收据管理 (Receipt Management)</text>
+    </navigator>
+  </view>
+  <view class="section">
+    <navigator url="../issuequt/issuequt" open-type="navigate" class="menuitem" style="min-width:{{pageWidth-2*infoLeft}}px;">
+      <text>开具报价 (Issue Quotation)</text>
+    </navigator>
+  </view>
+  <view class="section">
+    <navigator url="../qutmgmt/qutmgmt" open-type="navigate" class="menuitem" style="min-width:{{pageWidth-2*infoLeft}}px;">
+      <text>报价管理 (Quotation Management)</text>
+    </navigator>
+  </view-->
+</view>

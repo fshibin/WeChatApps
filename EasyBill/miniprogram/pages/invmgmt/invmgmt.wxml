@@ -1,0 +1,37 @@
+<!--miniprogram/pages/invmgmt/invmgmt.wxml-->
+<view class="page" id="page">
+  <view class="section"/>
+  <button class="button" style="width:100%" bindtap="onOpenPdf" disabled="{{invoiceId==''}}">打开发票</button>
+  <button class="button" wx:if="{{lastPage>0}}" style="width:100%" disabled="{{page==lastPage}}" bindtap="onNext">下一页</button>
+  <button class="button" wx:if="{{lastPage>0}}" style="width:100%" disabled="{{page==0}}" bindtap="onPre">上一页</button>
+  <view class="section">
+    <view class="prompt">发票列表:</view>
+    <radio-group class="cbgroup" wx:for="{{invoices}}" wx:key="index" bindchange="onRadioChange" data-checkid="{{index}}" style="max-width:{{pageWidth-2*infoLeft}}px;">
+      <radio class="checkbox2" checked="{{item.iid==invSelected}}"></radio>
+      <text class="cbitem" auto-height="true" style="font-size:32rpx">{{item.iid}}, {{item.client}}</text>
+    </radio-group>
+  </view>
+  <view class="section">
+    <view class="prompt" style="min-width:{{pageWidth-2*infoLeft}}px;">发票号码: {{invoiceId==''?'':invoiceId}}</view>
+    <view class="prompt" style="min-width:{{pageWidth-2*infoLeft}}px;">客户名称: {{client==''?'':client}}</view>
+    <view class="prompt" style="min-width:{{pageWidth-2*infoLeft}}px;">总计价格: {{totalPrice==''?'':'$'+totalPrice}}</view>
+    <view class="prompt" style="min-width:{{pageWidth-2*infoLeft}}px;">已付金额: {{paid==''?'':'$'+paid}}</view>
+    <view class="prompt" style="min-width:{{pageWidth-2*infoLeft}}px;">发票状态: {{state==''?'':state}}</view>
+  </view>
+  <view class="section">
+    <view class="prompt">明细列表:</view>
+    <radio-group class="cbgroup" wx:for="{{items}}" wx:key="index" bindchange="onRadioChange2" data-checkid="{{index}}" style="max-width:{{pageWidth-2*infoLeft}}px;">
+      <radio class="checkbox2" checked="{{item.desc==itemSelected}}"></radio>
+      <text class="cbitem" auto-height="true" style="font-size:32rpx">{{item.desc}}</text>
+    </radio-group>
+  </view>
+  <view class="section">
+    <view class="prompt" wx:if="{{gst}}" style="min-width:{{pageWidth-2*infoLeft}}px;">备注: 价格包含GST</view>
+    <view class="prompt" style="min-width:{{pageWidth-2*infoLeft}}px;">描述: {{desc==''?'':desc}}</view>
+    <view class="prompt" style="min-width:{{pageWidth-2*infoLeft}}px;">单价: {{price==''?'':price}}</view>
+    <view class="prompt" style="min-width:{{pageWidth-2*infoLeft}}px;">数量: {{qty==''?'':qty}}</view>
+  </view>
+  <button class="button" style="width:100%" bindtap="onVoid">作废Void</button>
+  <button class="button" style="width:100%" bindtap="onDelete">删除Delete</button>
+  <view class="section"/>
+</view>

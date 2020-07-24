@@ -12,7 +12,7 @@
     </block>
   </view>
   <view class="usermotto">
-    <text wx:if="{{(!hasUserInfo || !userInfo.nickName) && canIUse}}" class="nextstep">请点击上面的按钮来获取\n您的头像、昵称、地区和性别等信息。\nPlease click above button to obtain your information like nickname, profile photo, region and gender, etc.\n</text>
+    <text wx:if="{{(!hasUserInfo || !userInfo.nickName) && canIUse}}" class="nextstep">本微信小程序仅供Koh Brother公司的管理员和司机使用；如您不是，请退出。\n为了判断您是管理员还是司机，本微信小程序需要获取您的微信昵称。\n请点击上面的按钮来允许本微信小程序获取您的头像、昵称、地区和性别等信息。\nThis WeChat mini program is exclusively used by the admin and drivers of Koh Brother Ltd. If you are not, please leave. \nIn order to determine if you are the admin or a driver, this program needs to get your WeChat nickname. \nPlease click above button to allow this program to obtain your information like nickname, profile photo, region and gender, etc.</text>
     <text wx:else class="nextstep">请点击您的头像进入主菜单。\nPlease click your profile photo to enter the main menu.</text>
   </view>
 </view>

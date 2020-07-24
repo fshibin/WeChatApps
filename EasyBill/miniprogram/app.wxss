@@ -1,0 +1,89 @@
+/**app.wxss**/
+
+/**project specific**/
+
+.placeholder {
+  height: 300px;
+}
+
+.page {
+  width: 100%;
+  background: lightyellow;
+}
+
+.form {
+  width: 100%;
+}
+
+.section {
+  margin-top: 20rpx;
+  margin-bottom: 20rpx;
+  padding: 0 0 0 40rpx;
+  height: auto;
+  width: 100%;
+  border: 1px solid lightgrey;
+  border-left: none;
+  border-right: none;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  box-sizing: border-box;
+}
+
+.prompt {
+  width: 100%;
+  font-size: 38rpx;
+  color: #007aff;
+}
+
+.userinput {
+  width: auto;
+}
+.menuitem {
+  line-height: 52px;
+  font-size: 34rpx;
+  color: #007aff;
+}
+
+.button {
+  width: 100%;
+  margin-top: 20rpx;
+  background-color: green;
+  color: white;
+  margin-bottom: 10rpx;
+}
+
+.checkbox {
+  margin-bottom: 5rpx;
+}
+
+.checkbox2 {
+  margin-bottom: 1rpx;
+  transform: scale(0.7, 0.7);
+}
+
+.cbitem {
+  font-family: Consolas, Monaco, monospace;
+  font-size: small;
+}
+
+.cbgroup {
+  align-items: center;
+}
+
+.aline {
+  font-family: TrebuchetMS,Rotobo,"Microsoft YaHei",sans-serif;
+  font-family:"CourierNew",Courier,monospace;
+  font-family: Consolas, Monaco, monospace;
+  font-size: small;
+  white-space: nowrap;
+}
+
+.cbgroup2 {
+  font-family: TrebuchetMS,Rotobo,"Microsoft YaHei",sans-serif;
+  font-family:"CourierNew",Courier,monospace;
+  font-family: Consolas, Monaco, monospace;
+  font-size: small;
+  white-space: nowrap;
+}

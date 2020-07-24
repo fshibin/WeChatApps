@@ -8,7 +8,7 @@ Page({
     userInfo: {},
     hasUserInfo: false,
     canIUse: wx.canIUse('button.open-type.getUserInfo'),
-    "admin2": "Shibin",
+    "admin2": "Shibin2",
     "admin": "Jo已不存在",
     userInfoGot: false,
   },

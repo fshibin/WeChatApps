@@ -28,11 +28,12 @@
 		"useCompilerModule": false,
 		"userConfirmedUseCompilerModuleSwitch": false
 	},
-	"appid": "wxbbcd4acc2253b43f",
-	"projectname": "KohBrother",
+	"appid": "wxc57019a340431a36",
+	"projectname": "EasyBill",
 	"libVersion": "2.8.1",
 	"simulatorType": "wechat",
 	"simulatorPluginLibVersion": {},
+	"cloudfunctionTemplateRoot": "cloudfunctionTemplate",
 	"condition": {
 		"search": {
 			"current": -1,
