@@ -6,7 +6,10 @@
       <text>请稍候...</text>
     </block>
     <block wx:else>
-      <text wx:if="{{!isAuthorized}}">您未被授权使用该小程序，请退出。</text>
+      <block wx:if="{{!isAuthorized}}">
+          <view style="font-size:34rpx;">{{openId}}</view>
+          <view>您未被授权使用该小程序，请退出。</view>
+      </block>
       <block wx:else>
         <button class="button" bindtap="onClick">开始</button>
       </block>

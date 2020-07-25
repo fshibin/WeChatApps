@@ -6,14 +6,19 @@ Page({
 
   data: {
     openId: "",
-    adminOpenIds: [
-      "oz6ug4rM0efakVtCzfkqGWOV8OXY",
-    ],
+    adminOpenIds: [],
     isAuthorized: false,
   },
 
   onLoad: function () {
-    this.getOpenId();
+    const db = wx.cloud.database();
+    db.collection('settings').get().then(res => {
+      this.data.adminOpenIds = res.data[0].adminOpenIds
+      this.getOpenId();
+    })
+    .catch(err => {
+      getApp().showError('访问数据库出错！');
+    })
   },
 
   // 获取用户openid
@@ -24,7 +29,7 @@ Page({
       success: res => {
         this.setData({
           openId: res.result,
-          isAuthorized: this.data.adminOpenIds.includes(res.result),
+          isAuthorized: this.data.adminOpenIds.length == 0 || this.data.adminOpenIds.includes(res.result),
         });
       },
       fail: err => {
